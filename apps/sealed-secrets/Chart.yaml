@@ -6,5 +6,5 @@ appVersion: "1.0.0"
 dependencies:
   # https://artifacthub.io/packages/helm/bitnami-labs/sealed-secrets
   - name: sealed-secrets
-    version: 2.18.4
+    version: 2.18.5
     repository: https://bitnami-labs.github.io/sealed-secrets
