@@ -1,0 +1,4 @@
+sealed-secrets:
+  fullnameOverride: "sealed-secrets-controller"
+  namespace: "sealed-secrets"
+  keyrenewperiod: "720h30m"
