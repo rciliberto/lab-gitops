@@ -1,0 +1,16 @@
+argo-cd:
+  createClusterRoles: true
+  crds:
+    install: true
+  redis-ha:
+    enabled: true
+  server:
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+  repoServer:
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+  applicationSet:
+    replicas: 2
