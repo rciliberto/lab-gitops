@@ -1,0 +1,9 @@
+/talosconfig filter=git-crypt diff=git-crypt
+/templates/** filter=git-crypt diff=git-crypt
+/machines/** filter=git-crypt diff=git-crypt
+/patches/** filter=git-crypt diff=git-crypt
+/schematics/** filter=git-crypt diff=git-crypt
+/secrets.yml filter=git-crypt diff=git-crypt
+/secrets.yaml filter=git-crypt diff=git-crypt
+/apps/**/secrets.yml filter=git-crypt diff=git-crypt
+/apps/**/secrets.yaml filter=git-crypt diff=git-crypt
