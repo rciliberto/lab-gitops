@@ -1,0 +1,24 @@
+vaultwarden:
+  domain: "https://vault.ciliber.to"
+  signupsAllowed: false
+
+  # Generate an Argon2 hashed admin token:
+  #   vaultwarden hash
+  # Then seal the secret with kubeseal.
+  adminToken:
+    existingSecret: "vaultwarden-secret"
+    existingSecretKey: "ADMIN_TOKEN"
+
+  smtp:
+    host: "smtp-relay.smtp-relay.svc.cluster.local"
+    port: 25
+    security: "off"
+    from: "no-reply@ciliber.to"
+
+  storage:
+    data:
+      name: "vaultwarden-data"
+      size: "15Gi"
+      class: "longhorn"
+      path: "/data"
+      accessMode: "ReadWriteOnce"
