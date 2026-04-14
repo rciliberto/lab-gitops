@@ -1,0 +1,9 @@
+{
+  "app": {
+    "name": "sealed-secrets",
+    "path": "apps/sealed-secrets",
+    "namespace": "sealed-secrets",
+    "autoSync": true,
+    "syncOptions": []
+  }
+}

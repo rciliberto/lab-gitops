@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: lab-apps
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: git@github.com:rciliberto/lab-gitops.git
+        revision: main
+        files:
+          - path: apps/*/config.json
+  template:
+    metadata:
+      name: "{{ .app.name }}"
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:rciliberto/lab-gitops.git
+        path: "{{ .app.path }}"
+        targetRevision: main
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{ .app.namespace }}"
+  templatePatch: |
+    spec:
+      syncPolicy:
+        {{- if .app.autoSync }}
+        automated:
+          prune: true
+          selfHeal: true
+        {{- end }}
+        {{- with .app.syncOptions }}
+        syncOptions:
+          {{- range . }}
+          - {{ . }}
+          {{- end }}
+        {{- end }}

@@ -1,0 +1,9 @@
+{
+  "app": {
+    "name": "envoy-gateway",
+    "path": "apps/envoy-gateway",
+    "namespace": "envoy-gateway-system",
+    "autoSync": true,
+    "syncOptions": ["ServerSideApply=true"]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "app": {
+    "name": "cert-manager",
+    "path": "apps/cert-manager",
+    "namespace": "cert-manager",
+    "autoSync": true,
+    "syncOptions": []
+  }
+}
