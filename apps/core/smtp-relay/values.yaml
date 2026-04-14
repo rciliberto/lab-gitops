@@ -12,5 +12,12 @@ smtp-relay:
     port: 25
   secret:
     create: false
+  probes:
+    liveness:
+      enabled: true
+      periodSeconds: 60
+    readiness:
+      enabled: true
+      periodSeconds: 60
   persistence:
     enabled: false
