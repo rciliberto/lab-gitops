@@ -1,7 +1,7 @@
-forapiVersion: argoproj.io/v1alpha1
+apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: lab-apps
+  name: platform
   namespace: argocd
 spec:
   goTemplate: true
@@ -10,31 +10,23 @@ spec:
     - git:
         repoURL: git@github.com:rciliberto/lab-gitops.git
         revision: main
-        files:
-          - path: apps/*/config.json
+        directories:
+          - path: platform/*
   template:
     metadata:
-      name: "{{ .app.name }}"
+      name: "platform-{{ .path.basename }}"
     spec:
       project: default
       source:
         repoURL: git@github.com:rciliberto/lab-gitops.git
-        path: "{{ .app.path }}"
+        path: "{{ .path.path }}"
         targetRevision: main
       destination:
         server: https://kubernetes.default.svc
-        namespace: "{{ .app.namespace }}"
-  templatePatch: |
-    spec:
+        namespace: argocd
       syncPolicy:
-        {{- if .app.autoSync }}
         automated:
           prune: true
           selfHeal: true
-        {{- end }}
-        {{- with .app.syncOptions }}
         syncOptions:
-          {{- range . }}
-          - {{ . }}
-          {{- end }}
-        {{- end }}
+          - ServerSideApply=true
