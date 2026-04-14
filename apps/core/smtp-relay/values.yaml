@@ -1,0 +1,16 @@
+smtp-relay:
+  smtp:
+    host: "smtp.mailgun.org:587"
+    username: "no-reply@ciliber.to"
+    password: ""
+    myhostname: smtp-relay.lab.ciliber.to
+    mynetworks:
+      - "10.0.0.0/8"
+    use_tls: "yes"
+  service:
+    type: ClusterIP
+    port: 25
+  secret:
+    create: false
+  persistence:
+    enabled: false
