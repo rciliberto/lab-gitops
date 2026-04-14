@@ -1,8 +1,8 @@
 {
   "app": {
-    "name": "external-dns-unifi",
-    "path": "apps/external-dns-unifi",
-    "namespace": "external-dns-unifi",
+    "name": "external-dns",
+    "path": "apps/external-dns",
+    "namespace": "external-dns",
     "autoSync": true,
     "syncOptions": []
   }
