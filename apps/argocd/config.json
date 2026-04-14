@@ -1,9 +1,0 @@
-{
-  "app": {
-    "name": "argocd",
-    "path": "apps/argocd",
-    "namespace": "argocd",
-    "autoSync": true,
-    "syncOptions": ["ServerSideApply=true"]
-  }
-}
