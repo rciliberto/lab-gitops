@@ -1,0 +1,69 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: lab-gateway
+  namespace: envoy-gateway-system
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01-issuer
+spec:
+  gatewayClassName: eg
+  listeners:
+    - name: http
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https-lab
+      hostname: "*.lab.ciliber.to"
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: lab-wildcard-tls
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https-public
+      hostname: "*.ciliber.to"
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: public-wildcard-tls
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https-launchboats-dev
+      hostname: "*.launchboats.dev"
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: launchboats-dev-wildcard-tls
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https-launch-boats
+      hostname: "*.launch.boats"
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: launch-boats-wildcard-tls
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: ssh
+      port: 22
+      protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: All
+        kinds:
+          - group: gateway.networking.k8s.io
+            kind: TCPRoute
