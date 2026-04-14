@@ -6,7 +6,7 @@ external-dns:
     webhook:
       image:
         repository: ghcr.io/kashalls/external-dns-unifi-webhook
-        tag: v0.6.0 # replace with a versioned release tag
+        tag: v0.8.2 # replace with a versioned release tag
       env:
         - name: UNIFI_HOST
           value: https://10.20.20.1 # replace with the address to your UniFi router
