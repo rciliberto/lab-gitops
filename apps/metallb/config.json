@@ -1,0 +1,9 @@
+{
+  "app": {
+    "name": "metallb",
+    "path": "apps/metallb",
+    "namespace": "metallb-system",
+    "autoSync": true,
+    "syncOptions": ["ServerSideApply=true"]
+  }
+}
