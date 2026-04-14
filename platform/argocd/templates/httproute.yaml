@@ -16,7 +16,7 @@ spec:
     - backendRefs:
         - group: ''
           kind: Service
-          name: argocd-server
+          name: platform-argocd-server
           port: 80
           weight: 1
       matches:
