@@ -5,12 +5,21 @@ metadata:
   namespace: argocd
 spec:
   parentRefs:
-    - name: lab-gateway
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: lab-gateway
       namespace: envoy-gateway-system
       sectionName: https-lab
   hostnames:
     - argocd.lab.ciliber.to
   rules:
     - backendRefs:
-        - name: argocd-server
+        - group: ''
+          kind: Service
+          name: argocd-server
           port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
