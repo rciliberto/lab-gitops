@@ -21,7 +21,9 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
-          - name: lab-wildcard-tls
+          - group: ''
+            kind: Secret
+            name: lab-wildcard-tls
       allowedRoutes:
         namespaces:
           from: All
@@ -32,7 +34,9 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
-          - name: public-wildcard-tls
+          - group: ''
+            kind: Secret
+            name: public-wildcard-tls
       allowedRoutes:
         namespaces:
           from: All
@@ -43,7 +47,9 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
-          - name: launchboats-dev-wildcard-tls
+          - group: ''
+            kind: Secret
+            name: launchboats-dev-wildcard-tls
       allowedRoutes:
         namespaces:
           from: All
@@ -54,7 +60,9 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
-          - name: launch-boats-wildcard-tls
+          - group: ''
+            kind: Secret
+            name: launch-boats-wildcard-tls
       allowedRoutes:
         namespaces:
           from: All
