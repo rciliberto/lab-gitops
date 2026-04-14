@@ -1,0 +1,7 @@
+actualbudget:
+  persistence:
+    enabled: true
+    storageClass: "longhorn"
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
