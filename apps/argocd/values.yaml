@@ -5,6 +5,8 @@ argo-cd:
   redis-ha:
     enabled: true
   server:
+    extraArgs:
+      - --insecure
     autoscaling:
       enabled: true
       minReplicas: 2
