@@ -1,0 +1,16 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: longhorn-ui
+  namespace: longhorn-system
+spec:
+  parentRefs:
+    - name: lab-gateway
+      namespace: envoy-gateway-system
+      sectionName: https-lab
+  hostnames:
+    - longhorn.lab.ciliber.to
+  rules:
+    - backendRefs:
+        - name: longhorn-frontend
+          port: 80

@@ -1,0 +1,9 @@
+{
+  "app": {
+    "name": "longhorn",
+    "path": "apps/longhorn",
+    "namespace": "longhorn-system",
+    "autoSync": true,
+    "syncOptions": ["ServerSideApply=true"]
+  }
+}

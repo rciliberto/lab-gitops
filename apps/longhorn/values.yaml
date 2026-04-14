@@ -1,0 +1,9 @@
+longhorn:
+  defaultSettings:
+    defaultDataPath: /var/lib/longhorn
+    defaultReplicaCount: 3
+    guaranteedInstanceManagerCPU: 0
+    backupTarget: ""
+  persistence:
+    defaultClass: true
+    defaultClassReplicaCount: 3
