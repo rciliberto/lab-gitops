@@ -1,9 +1,0 @@
-{
-  "app": {
-    "name": "renovate",
-    "path": "apps/renovate",
-    "namespace": "renovate",
-    "autoSync": true,
-    "syncOptions": []
-  }
-}

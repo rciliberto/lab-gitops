@@ -1,9 +1,0 @@
-{
-  "app": {
-    "name": "external-dns",
-    "path": "apps/external-dns",
-    "namespace": "external-dns",
-    "autoSync": true,
-    "syncOptions": []
-  }
-}
