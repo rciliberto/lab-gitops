@@ -9,4 +9,6 @@ spec:
   destinations:
     - server: https://kubernetes.default.svc
       namespace: "launch-*"
-  clusterResourceWhitelist: []
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
