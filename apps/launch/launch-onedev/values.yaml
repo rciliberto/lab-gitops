@@ -17,8 +17,7 @@ onedev:
         echo "RESTORING BACKUP..."
         rm -rf /opt/onedev/internaldb /opt/onedev/_restore
         mkdir /opt/onedev/_restore
-        cd /opt/onedev/_restore
-        tar xzf /opt/onedev/backup.tar.gz 2>/dev/null || true
+        tar xzf /opt/onedev/backup.tar.gz -C /opt/onedev/_restore 2>/dev/null || true
         mv /opt/onedev/_restore/internaldb /opt/onedev/internaldb
         cp -a /opt/onedev/_restore/site/* /opt/onedev/site/ 2>/dev/null || true
         rm -rf /opt/onedev/_restore /opt/onedev/backup.tar.gz
