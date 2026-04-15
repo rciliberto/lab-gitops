@@ -1,5 +1,7 @@
 .worktrees/
 
+.idea
+
 ### Helm ###
 # Chart dependencies
 **/charts/*.tgz
