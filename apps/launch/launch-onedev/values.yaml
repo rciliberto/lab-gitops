@@ -1,4 +1,33 @@
 onedev:
+  # One-time restore: override entrypoint to inject backup restore between
+  # upgrade and server start. Remove command after restore is confirmed.
+  command:
+    - bash
+    - -c
+    - |
+      set -e
+      CPUARCH="x86-64"
+      [ "$(uname -m)" = "aarch64" ] && CPUARCH="arm-64"
+
+      # Phase 1: Run upgrade (same as original entrypoint)
+      /app/boot/wrapper-linux-$CPUARCH /app/conf/wrapper.conf -- upgrade /opt/onedev
+
+      # Phase 2: One-time backup restore
+      if [ -f /opt/onedev/backup.tar.gz ]; then
+        echo "RESTORING BACKUP..."
+        rm -rf /opt/onedev/internaldb /opt/onedev/_restore
+        mkdir /opt/onedev/_restore
+        cd /opt/onedev/_restore
+        tar xzf /opt/onedev/backup.tar.gz 2>/dev/null || true
+        mv /opt/onedev/_restore/internaldb /opt/onedev/internaldb
+        cp -a /opt/onedev/_restore/site/* /opt/onedev/site/ 2>/dev/null || true
+        rm -rf /opt/onedev/_restore /opt/onedev/backup.tar.gz
+        echo "RESTORE COMPLETE"
+      fi
+
+      # Phase 3: Start server (same as original entrypoint)
+      touch /opt/onedev/IN_DOCKER
+      exec /opt/onedev/boot/wrapper-linux-$CPUARCH /opt/onedev/conf/wrapper.conf
   persistence:
     storageClassName: "longhorn"
     size: 20Gi
