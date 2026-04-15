@@ -13,6 +13,22 @@ argo-cd:
       enabled: true
       minReplicas: 2
   repoServer:
+    initContainers:
+      - name: install-helm4
+        image: alpine:3
+        command: [sh, -c]
+        args:
+          - wget -qO- https://get.helm.sh/helm-v4.1.3-linux-amd64.tar.gz | tar xz -C /custom-tools linux-amd64/helm --strip-components=1
+        volumeMounts:
+          - name: custom-tools
+            mountPath: /custom-tools
+    volumes:
+      - name: custom-tools
+        emptyDir: {}
+    volumeMounts:
+      - name: custom-tools
+        mountPath: /usr/local/bin/helm
+        subPath: helm
     autoscaling:
       enabled: true
       minReplicas: 2
