@@ -1,0 +1,9 @@
+home-assistant:
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 5Gi
+    storageClass: "longhorn"
+
+  ingress:
+    enabled: false
