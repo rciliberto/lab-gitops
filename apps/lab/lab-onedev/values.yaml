@@ -1,0 +1,4 @@
+onedev:
+  persistence:
+    storageClassName: "longhorn"
+    size: 20Gi
