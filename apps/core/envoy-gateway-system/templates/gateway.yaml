@@ -75,3 +75,12 @@ spec:
         kinds:
           - group: gateway.networking.k8s.io
             kind: TCPRoute
+    - name: ssh-alt
+      port: 2222
+      protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: All
+        kinds:
+          - group: gateway.networking.k8s.io
+            kind: TCPRoute
