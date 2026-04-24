@@ -1,0 +1,10 @@
+apiVersion: v2
+name: cnpg-system-deployment
+version: 1.0.0
+appVersion: "1.0.0"
+
+dependencies:
+  # https://artifacthub.io/packages/helm/cloudnative-pg/cloudnative-pg
+  - name: cloudnative-pg
+    version: 0.28.0
+    repository: https://cloudnative-pg.github.io/charts
