@@ -1,5 +1,5 @@
 apiVersion: v2
-name: cnpg-system-deployment
+name: cnpg-deployment
 version: 1.0.0
 appVersion: "1.0.0"
 
