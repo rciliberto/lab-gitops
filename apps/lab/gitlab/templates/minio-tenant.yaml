@@ -11,7 +11,7 @@ spec:
   pools:
     - servers: 1
       name: pool-0
-      volumesPerServer: 4
+      volumesPerServer: 1
       volumeClaimTemplate:
         metadata:
           name: data
@@ -20,7 +20,7 @@ spec:
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 13Gi
+              storage: 50Gi
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
