@@ -53,12 +53,16 @@ gitlab:
       packages:
         bucket: gitlab-packages
       dependencyProxy:
+        enabled: true
         bucket: gitlab-dependency-proxy
       terraformState:
+        enabled: true
         bucket: gitlab-terraform-state
       ciSecureFiles:
+        enabled: true
         bucket: gitlab-ci-secure-files
       externalDiffs:
+        enabled: true
         bucket: gitlab-external-diffs
 
     # GitLab Shell SSH
