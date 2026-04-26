@@ -97,6 +97,10 @@ gitlab:
       redirect:
         disable: true
 
+  # Skip upgrade check (fails on fresh install with Argo CD)
+  upgradeCheck:
+    enabled: false
+
   # --- GitLab components ---
   gitlab:
     gitaly:
