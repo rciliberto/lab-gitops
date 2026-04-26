@@ -1,0 +1,117 @@
+gitlab:
+  global:
+    hosts:
+      domain: ciliber.to
+      gitlab:
+        name: code.ciliber.to
+        https: true
+      registry:
+        name: registry.ciliber.to
+        https: true
+
+    ingress:
+      enabled: false
+      configureCertmanager: false
+
+    # External PostgreSQL (CNPG-managed)
+    psql:
+      host: gitlab-db-rw.gitlab.svc.cluster.local
+      port: 5432
+      database: gitlabhq_production
+      username: gitlab
+      password:
+        useSecret: true
+        secret: gitlab-db-app
+        key: password
+
+    # External Redis (OpsTree-managed)
+    redis:
+      host: redis-standalone.gitlab.svc.cluster.local
+      port: 6379
+      auth:
+        enabled: true
+        secret: gitlab-redis-secret
+        key: password
+
+    # Disable bundled MinIO
+    minio:
+      enabled: false
+
+    # Consolidated object storage (Rails components)
+    appConfig:
+      object_store:
+        enabled: true
+        connection:
+          secret: gitlab-object-storage
+          key: connection
+      lfs:
+        bucket: gitlab-lfs
+      artifacts:
+        bucket: gitlab-artifacts
+      uploads:
+        bucket: gitlab-uploads
+      packages:
+        bucket: gitlab-packages
+
+    # GitLab Shell SSH
+    shell:
+      port: 2222
+
+    # SMTP (cluster-internal relay, no auth)
+    smtp:
+      enabled: true
+      address: smtp-relay.smtp-relay.svc.cluster.local
+      port: 25
+      authentication: ""
+      starttls_auto: false
+      openssl_verify_mode: "none"
+    email:
+      from: no-reply@ciliber.to
+      display_name: GitLab
+      reply_to: no-reply@ciliber.to
+
+    # Initial root password
+    initialRootPassword:
+      secret: gitlab-root-password
+      key: password
+
+  # --- Disable all bundled sub-charts ---
+  installCertmanager: false
+  postgresql:
+    install: false
+  redis:
+    install: false
+  nginx-ingress:
+    enabled: false
+  prometheus:
+    install: false
+  gitlab-runner:
+    install: false
+
+  # --- Container Registry ---
+  registry:
+    enabled: true
+    storage:
+      secret: gitlab-registry-storage
+      key: config
+      redirect:
+        disable: true
+
+  # --- GitLab components ---
+  gitlab:
+    gitaly:
+      persistence:
+        storageClass: longhorn
+        size: 50Gi
+    gitlab-shell:
+      sshDaemon: gitlab-sshd
+      service:
+        type: ClusterIP
+        internalPort: 2222
+    toolbox:
+      backups:
+        objectStorage:
+          config:
+            secret: gitlab-backup-storage
+            key: config
+          bucket: gitlab-backups

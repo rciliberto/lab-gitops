@@ -1,0 +1,50 @@
+apiVersion: minio.min.io/v2
+kind: Tenant
+metadata:
+  name: minio
+  namespace: gitlab
+spec:
+  image: quay.io/minio/minio:RELEASE.2025-04-08T15-41-24Z
+  imagePullPolicy: IfNotPresent
+  configuration:
+    name: gitlab-minio-env
+  pools:
+    - servers: 1
+      name: pool-0
+      volumesPerServer: 4
+      volumeClaimTemplate:
+        metadata:
+          name: data
+        spec:
+          storageClassName: longhorn
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 13Gi
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        runAsNonRoot: true
+      containerSecurityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]
+        seccompProfile:
+          type: RuntimeDefault
+  mountPath: /export
+  subPath: /data
+  buckets:
+    - name: gitlab-artifacts
+    - name: gitlab-uploads
+    - name: gitlab-lfs
+    - name: gitlab-packages
+    - name: gitlab-registry
+    - name: gitlab-backups
+  requestAutoCert: false
+  features:
+    bucketDNS: false
+  podManagementPolicy: Parallel
