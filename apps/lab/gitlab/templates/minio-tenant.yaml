@@ -44,6 +44,10 @@ spec:
     - name: gitlab-packages
     - name: gitlab-registry
     - name: gitlab-backups
+    - name: gitlab-dependency-proxy
+    - name: gitlab-terraform-state
+    - name: gitlab-ci-secure-files
+    - name: gitlab-external-diffs
   requestAutoCert: false
   features:
     bucketDNS: false

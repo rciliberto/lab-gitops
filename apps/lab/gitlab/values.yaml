@@ -52,6 +52,14 @@ gitlab:
         bucket: gitlab-uploads
       packages:
         bucket: gitlab-packages
+      dependencyProxy:
+        bucket: gitlab-dependency-proxy
+      terraformState:
+        bucket: gitlab-terraform-state
+      ciSecureFiles:
+        bucket: gitlab-ci-secure-files
+      externalDiffs:
+        bucket: gitlab-external-diffs
 
     # GitLab Shell SSH
     shell:
