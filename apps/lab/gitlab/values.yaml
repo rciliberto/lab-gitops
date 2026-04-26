@@ -72,7 +72,7 @@ gitlab:
 
     # Initial root password
     initialRootPassword:
-      secret: gitlab-root-password
+      secret: gitlab-initial-root-password
       key: password
 
   # --- Disable all bundled sub-charts ---
