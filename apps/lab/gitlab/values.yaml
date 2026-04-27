@@ -97,11 +97,10 @@ gitlab:
     install: false
   gitlab-runner:
     install: true
+    concurrent: 4
+    checkInterval: 5
     runners:
       config: |
-        concurrent = 4
-        check_interval = 5
-
         [[runners]]
           name = "kubernetes-runner"
           request_concurrency = 4
