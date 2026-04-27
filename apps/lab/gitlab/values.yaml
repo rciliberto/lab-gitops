@@ -126,7 +126,7 @@ gitlab:
       jobNamespace: gitlab-ci
     cache:
       secretName: gitlab-runner-cache-s3
-    unregisterRunners: false
+    unregisterRunners: true
     sessionServer:
       enabled: true
       serviceType: ClusterIP
