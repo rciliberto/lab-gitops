@@ -48,6 +48,7 @@ spec:
     - name: gitlab-terraform-state
     - name: gitlab-ci-secure-files
     - name: gitlab-external-diffs
+    - name: gitlab-runner-cache
   requestAutoCert: false
   features:
     bucketDNS: false
