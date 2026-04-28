@@ -114,7 +114,7 @@ gitlab:
             memory_limit = "16Gi"
             pull_policy = ["always"]
             allowed_pull_policies = ["always", "if-not-present"]
-            poll_interval = 1
+            poll_interval = 3
             poll_timeout = 600
           [runners.cache]
             Type = "s3"
