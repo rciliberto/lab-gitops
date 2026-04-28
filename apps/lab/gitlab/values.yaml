@@ -143,8 +143,24 @@ gitlab:
       redirect:
         disable: true
 
-  # --- GitLab components ---
+  # --- Webservice (Puma) ---
   gitlab:
+    webservice:
+      resources:
+        requests:
+          cpu: 1
+          memory: 2.5G
+        limits:
+          cpu: 2
+          memory: 4G
+    sidekiq:
+      resources:
+        requests:
+          cpu: 500m
+          memory: 1G
+        limits:
+          cpu: 2
+          memory: 2.5G
     gitaly:
       persistence:
         storageClass: longhorn
