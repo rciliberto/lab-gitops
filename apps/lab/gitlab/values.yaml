@@ -108,7 +108,6 @@ gitlab:
             namespace = "gitlab-ci"
             image = "alpine:3.19"
             privileged = false
-            image_pull_credentials = ["gitlab-registry"]
             cpu_request = "500m"
             memory_request = "1Gi"
             cpu_limit = "8"
