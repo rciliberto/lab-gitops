@@ -112,6 +112,7 @@ gitlab:
             memory_request = "1Gi"
             cpu_limit = "8"
             memory_limit = "16Gi"
+            pull_policy = ["always"]
             allowed_pull_policies = ["always", "if-not-present"]
             poll_interval = 1
             poll_timeout = 600
@@ -126,8 +127,9 @@ gitlab:
               Insecure = true
       secret: gitlab-runner-token
       jobNamespace: gitlab-ci
-    cache:
-      secretName: gitlab-runner-cache-s3
+      cache:
+        cacheType: s3
+        secretName: gitlab-runner-cache-s3
     unregisterRunners: true
     sessionServer:
       enabled: true
