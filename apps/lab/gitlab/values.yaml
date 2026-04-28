@@ -104,6 +104,7 @@ gitlab:
         [[runners]]
           name = "kubernetes-runner"
           request_concurrency = 4
+          environment = ["KUBERNETES_IMAGE_PULL_CREDENTIALS=gitlab-registry"]
           [runners.kubernetes]
             namespace = "gitlab-ci"
             image = "alpine:3.19"
