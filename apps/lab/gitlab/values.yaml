@@ -155,7 +155,7 @@ gitlab:
         enabled: true
     gc:
       disabled: false
-      reviewafter: 24h
+      reviewafter: 1h
       manifests:
         disabled: false
         interval: 5s
