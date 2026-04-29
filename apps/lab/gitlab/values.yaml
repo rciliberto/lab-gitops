@@ -141,12 +141,8 @@ gitlab:
   # --- Container Registry ---
   registry:
     enabled: true
-    maintenance:
-      readonly:
-        enabled: true
     database:
-      configure: true
-      enabled: false
+      enabled: true
       host: gitlab-registry-db-rw.gitlab.svc.cluster.local
       port: 5432
       user: registry
@@ -157,6 +153,16 @@ gitlab:
       sslmode: disable
       migrations:
         enabled: true
+    gc:
+      disabled: false
+      reviewafter: 24h
+      manifests:
+        disabled: false
+        interval: 5s
+      blobs:
+        disabled: false
+        interval: 5s
+        storagetimeout: 5s
     storage:
       secret: gitlab-registry-storage
       key: config
