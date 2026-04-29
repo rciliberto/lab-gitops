@@ -141,6 +141,22 @@ gitlab:
   # --- Container Registry ---
   registry:
     enabled: true
+    maintenance:
+      readonly:
+        enabled: true
+    database:
+      configure: true
+      enabled: false
+      host: gitlab-registry-db-rw.gitlab.svc.cluster.local
+      port: 5432
+      user: registry
+      name: registry
+      password:
+        secret: gitlab-registry-db-app
+        key: password
+      sslmode: disable
+      migrations:
+        enabled: true
     storage:
       secret: gitlab-registry-storage
       key: config
