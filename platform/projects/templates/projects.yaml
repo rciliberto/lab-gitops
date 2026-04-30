@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: projects
+  namespace: argocd
+spec:
+  sourceRepos:
+    - git@github.com:rciliberto/lab-gitops.git
+    - https://code.ciliber.to/api/v4/projects/*/packages/helm/stable
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: "*"
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace

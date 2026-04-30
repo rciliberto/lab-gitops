@@ -1,0 +1,14 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: scouting-dashboard-db
+  namespace: dsl-scouting-dashboard
+spec:
+  instances: 1
+  storage:
+    storageClass: longhorn
+    size: 10Gi
+  bootstrap:
+    initdb:
+      database: scouting_dashboard
+      owner: scouting_dashboard
