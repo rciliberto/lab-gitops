@@ -7,3 +7,5 @@
 /secrets.yaml filter=git-crypt diff=git-crypt
 /apps/**/secrets.yml filter=git-crypt diff=git-crypt
 /apps/**/secrets.yaml filter=git-crypt diff=git-crypt
+/platform/**/secrets.yml filter=git-crypt diff=git-crypt
+/platform/**/secrets.yaml filter=git-crypt diff=git-crypt
