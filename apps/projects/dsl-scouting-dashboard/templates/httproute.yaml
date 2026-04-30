@@ -5,6 +5,7 @@ metadata:
   namespace: dsl-scouting-dashboard
   annotations:
     link.argocd.argoproj.io/external-link: https://dslstats.com
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
