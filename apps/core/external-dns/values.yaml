@@ -40,4 +40,4 @@ external-dns:
   sources: ["ingress", "service", "gateway-httproute"]
   txtOwnerId: default
   txtPrefix: k8s.
-  domainFilters: ["ciliber.to", "launchboats.dev", "launch.boats"]
+  domainFilters: ["ciliber.to", "launchboats.dev", "launch.boats", "dslstats.com"]

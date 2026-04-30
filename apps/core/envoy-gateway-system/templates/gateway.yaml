@@ -66,6 +66,19 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+    - name: https-dslstats
+      hostname: "dslstats.com"
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - group: ''
+            kind: Secret
+            name: dslstats-com-tls
+      allowedRoutes:
+        namespaces:
+          from: All
     - name: ssh
       port: 22
       protocol: TCP
