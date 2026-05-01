@@ -1,8 +1,8 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: scouting-dashboard-db
-  namespace: dsl-scouting-dashboard
+  name: dsl-dashboard-db
+  namespace: dsl-dashboard
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
@@ -12,5 +12,5 @@ spec:
     size: 10Gi
   bootstrap:
     initdb:
-      database: scouting_dashboard
-      owner: scouting_dashboard
+      database: dsl_dashboard
+      owner: dsl_dashboard
