@@ -1,0 +1,12 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+metadata:
+  name: keep-escaped-slashes
+  namespace: envoy-gateway-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: lab-gateway
+  path:
+    escapedSlashesAction: KeepUnchanged
