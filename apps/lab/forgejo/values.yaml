@@ -71,7 +71,7 @@ forgejo:
         DOMAIN: code2.ciliber.to
         SSH_DOMAIN: code2.ciliber.to
         ROOT_URL: https://code2.ciliber.to/
-        SSH_PORT: 22
+        SSH_PORT: 2222
         SSH_LISTEN_PORT: 2222
         OFFLINE_MODE: true
         START_SSH_SERVER: true

@@ -7,7 +7,7 @@ spec:
   parentRefs:
     - name: lab-gateway
       namespace: envoy-gateway-system
-      sectionName: ssh
+      sectionName: ssh-alt
   rules:
     - backendRefs:
         - name: forgejo-ssh
