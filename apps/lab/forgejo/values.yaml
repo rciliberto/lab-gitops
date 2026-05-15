@@ -39,6 +39,7 @@ forgejo:
   gitea:
     admin:
       existingSecret: forgejo-admin-credentials
+      email: forgejo@ciliber.to
       passwordMode: initialOnlyNoReset
 
     additionalConfigFromEnvs:
