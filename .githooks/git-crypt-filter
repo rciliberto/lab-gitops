@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -ne 1 || ( "$1" != "clean" && "$1" != "smudge" ) ]]; then
+  echo "usage: $0 clean|smudge" >&2
+  exit 2
+fi
+
+git_dir=$(git rev-parse --git-dir)
+common_dir=$(git rev-parse --git-common-dir)
+
+if [[ "$git_dir" != "$common_dir" && ! -e "$git_dir/git-crypt" && -e "$common_dir/git-crypt" ]]; then
+  ln -s "$common_dir/git-crypt" "$git_dir/git-crypt"
+fi
+
+exec git-crypt "$1"
