@@ -65,9 +65,9 @@ gitlab:
         enabled: true
         bucket: gitlab-external-diffs
 
-    # GitLab Shell SSH
+    # GitLab SSH is intentionally unrouted during Forgejo migration.
     shell:
-      port: 2222
+      port: 2223
 
     # SMTP (cluster-internal relay, no auth)
     smtp:
