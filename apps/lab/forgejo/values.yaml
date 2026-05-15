@@ -115,5 +115,8 @@ forgejo:
         SMTP_PORT: 25
         FROM: forgejo@ciliber.to
 
+  # Forgejo Actions are enabled in app.ini. The official forgejo chart 17.0.1
+  # does not ship an actions-runner subchart, so the runner must be added as a
+  # separate resource after an instance-level runner token exists.
   test:
     enabled: true
