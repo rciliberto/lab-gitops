@@ -84,6 +84,10 @@ spec:
           secret:
             secretName: {{ .Values.builder.credentialsSecretName }}
         - name: docker-cache
+{{- if .Values.builder.cache.enabled }}
           persistentVolumeClaim:
             claimName: forgejo-runner-builder-docker-cache
+{{- else }}
+          emptyDir: {}
+{{- end }}
 {{- end }}

@@ -26,6 +26,7 @@ spec:
   resources:
     requests:
       storage: {{ .Values.builder.state.size }}
+{{- if .Values.builder.cache.enabled }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -39,4 +40,5 @@ spec:
   resources:
     requests:
       storage: {{ .Values.builder.cache.size }}
+{{- end }}
 {{- end }}
