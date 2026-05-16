@@ -8,7 +8,7 @@ metadata:
 spec:
   project: projects
   source:
-    repoURL: https://code.ciliber.to/api/v4/projects/3/packages/helm/stable
+    repoURL: https://code2.ciliber.to/api/packages/death-slam-league/helm
     chart: dsl-dashboard
     targetRevision: ">=0.0.0-0"
     helm:
