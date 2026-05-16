@@ -32,19 +32,19 @@ ci:
   containerOptions: ""
   resources:
     requests:
-      cpu: 250m
-      memory: 256Mi
+      cpu: "1"
+      memory: 1Gi
     limits:
       cpu: "2"
-      memory: 2Gi
+      memory: 4Gi
   dind:
     resources:
       requests:
-        cpu: 500m
-        memory: 1Gi
-      limits:
         cpu: "4"
         memory: 8Gi
+      limits:
+        cpu: "16"
+        memory: 32Gi
   state:
     storageClassName: nfs-csi
     size: 1Gi
@@ -62,19 +62,19 @@ builder:
   containerOptions: "--add-host=dind.docker.internal:host-gateway"
   resources:
     requests:
-      cpu: 500m
-      memory: 512Mi
+      cpu: "1"
+      memory: 1Gi
     limits:
       cpu: "2"
-      memory: 2Gi
+      memory: 4Gi
   dind:
     resources:
       requests:
-        cpu: "1"
-        memory: 2Gi
+        cpu: "2"
+        memory: 8Gi
       limits:
-        cpu: "6"
-        memory: 12Gi
+        cpu: "8"
+        memory: 24Gi
   state:
     storageClassName: nfs-csi
     size: 1Gi
