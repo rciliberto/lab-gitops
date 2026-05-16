@@ -6,5 +6,5 @@ appVersion: "1.0.0"
 dependencies:
   # https://artifacthub.io/packages/helm/forgejo-helm/forgejo
   - name: forgejo
-    version: 17.0.1
+    version: 17.1.0
     repository: oci://code.forgejo.org/forgejo-helm
