@@ -24,8 +24,7 @@ runnerDefaults:
 validate:
   name: forgejo-runner-validate
   enabled: true
-  tokenSecretName: forgejo-runner-validate-token
-  tokenSecretKey: token
+  credentialsSecretName: forgejo-runner-validate-credentials
   labels:
     - docker:docker://node:current-trixie
   runnerDockerHost: tcp://127.0.0.1:2375
@@ -52,8 +51,7 @@ validate:
 builder:
   name: forgejo-runner-image-builder
   enabled: true
-  tokenSecretName: forgejo-runner-builder-token
-  tokenSecretKey: token
+  credentialsSecretName: forgejo-runner-builder-credentials
   labels:
     - image-builder:docker://node:current-trixie
   runnerDockerHost: tcp://127.0.0.1:2375

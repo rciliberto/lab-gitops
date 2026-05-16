@@ -8,9 +8,10 @@ data:
     log:
       level: info
     runner:
-      file: /data/.runner
       capacity: {{ .Values.runnerDefaults.capacity }}
       envs: {}
+      labels:
+{{ toYaml .Values.validate.labels | indent 8 }}
     cache:
       enabled: true
     container:
@@ -19,14 +20,21 @@ data:
       docker_host: {{ .Values.validate.runnerDockerHost | quote }}
       options: {{ .Values.validate.containerOptions | quote }}
       force_pull: false
+    server:
+      connections:
+        forgejo:
+          url: {{ .Values.forgejo.instanceUrl | quote }}
+          uuid: "${RUNNER_UUID}"
+          token: "${RUNNER_TOKEN}"
   builder-config.yml: |
     log:
       level: info
     runner:
-      file: /data/.runner
       capacity: {{ .Values.runnerDefaults.capacity }}
       envs:
         DOCKER_HOST: {{ .Values.builder.jobDockerHost | quote }}
+      labels:
+{{ toYaml .Values.builder.labels | indent 8 }}
     cache:
       enabled: true
     container:
@@ -35,17 +43,21 @@ data:
       docker_host: {{ .Values.builder.runnerDockerHost | quote }}
       options: {{ .Values.builder.containerOptions | quote }}
       force_pull: false
+    server:
+      connections:
+        forgejo:
+          url: {{ .Values.forgejo.instanceUrl | quote }}
+          uuid: "${RUNNER_UUID}"
+          token: "${RUNNER_TOKEN}"
   run-runner.sh: |
     #!/usr/bin/env sh
     set -eu
 
-    if [ ! -s /data/.runner ]; then
-      forgejo-runner register \
-        --no-interactive \
-        --instance "${FORGEJO_INSTANCE_URL}" \
-        --token "${RUNNER_TOKEN}" \
-        --name "${RUNNER_NAME}" \
-        --labels "${RUNNER_LABELS}"
-    fi
+    export RUNNER_UUID="$(cat /credentials/uuid)"
+    export RUNNER_TOKEN="$(cat /credentials/token)"
+    sed \
+      -e "s|\${RUNNER_UUID}|${RUNNER_UUID}|g" \
+      -e "s|\${RUNNER_TOKEN}|${RUNNER_TOKEN}|g" \
+      "${RUNNER_CONFIG_TEMPLATE}" > /data/config.yml
 
-    exec forgejo-runner daemon --config "${RUNNER_CONFIG}"
+    exec forgejo-runner daemon --config /data/config.yml
