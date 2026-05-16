@@ -4,21 +4,21 @@ metadata:
   name: forgejo-runner-config
   namespace: {{ .Values.namespace.name }}
 data:
-  validate-config.yml: |
+  ci-config.yml: |
     log:
       level: info
     runner:
       capacity: {{ .Values.runnerDefaults.capacity }}
       envs: {}
       labels:
-{{ toYaml .Values.validate.labels | indent 8 }}
+{{ toYaml .Values.ci.labels | indent 8 }}
     cache:
       enabled: true
     container:
       network: ""
       privileged: false
-      docker_host: {{ .Values.validate.runnerDockerHost | quote }}
-      options: {{ .Values.validate.containerOptions | quote }}
+      docker_host: {{ .Values.ci.runnerDockerHost | quote }}
+      options: {{ .Values.ci.containerOptions | quote }}
       force_pull: false
     server:
       connections:

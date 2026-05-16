@@ -1,8 +1,8 @@
-{{- if .Values.validate.enabled }}
+{{- if .Values.ci.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.validate.name }}
+  name: {{ .Values.ci.name }}
   namespace: {{ .Values.namespace.name }}
 spec:
   replicas: 1
@@ -10,12 +10,12 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Values.validate.name }}
+      app.kubernetes.io/name: {{ .Values.ci.name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ .Values.validate.name }}
-        app.kubernetes.io/component: validate-runner
+        app.kubernetes.io/name: {{ .Values.ci.name }}
+        app.kubernetes.io/component: ci-runner
     spec:
       securityContext:
         fsGroup: 1000
@@ -28,17 +28,17 @@ spec:
             - name: FORGEJO_INSTANCE_URL
               value: {{ .Values.forgejo.instanceUrl | quote }}
             - name: RUNNER_NAME
-              value: {{ .Values.validate.name | quote }}
+              value: {{ .Values.ci.name | quote }}
             - name: RUNNER_LABELS
-              value: {{ join "," .Values.validate.labels | quote }}
+              value: {{ join "," .Values.ci.labels | quote }}
             - name: RUNNER_LABELS_JSON
-              value: {{ toJson .Values.validate.labels | quote }}
+              value: {{ toJson .Values.ci.labels | quote }}
             - name: RUNNER_CONFIG_TEMPLATE
-              value: /config/validate-config.yml
+              value: /config/ci-config.yml
             - name: DOCKER_HOST
-              value: {{ .Values.validate.runnerDockerHost | quote }}
+              value: {{ .Values.ci.runnerDockerHost | quote }}
           resources:
-{{ toYaml .Values.validate.resources | indent 12 }}
+{{ toYaml .Values.ci.resources | indent 12 }}
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
@@ -63,7 +63,7 @@ spec:
             - name: DOCKER_TLS_CERTDIR
               value: ""
           resources:
-{{ toYaml .Values.validate.dind.resources | indent 12 }}
+{{ toYaml .Values.ci.dind.resources | indent 12 }}
           securityContext:
             privileged: true
           volumeMounts:
@@ -76,10 +76,10 @@ spec:
             defaultMode: 0755
         - name: state
           persistentVolumeClaim:
-            claimName: forgejo-runner-validate-state
+            claimName: forgejo-runner-ci-state
         - name: credentials
           secret:
-            secretName: {{ .Values.validate.credentialsSecretName }}
+            secretName: {{ .Values.ci.credentialsSecretName }}
         - name: docker-cache
           emptyDir: {}
 {{- end }}

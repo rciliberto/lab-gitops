@@ -1,16 +1,16 @@
-{{- if .Values.validate.enabled }}
+{{- if .Values.ci.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: forgejo-runner-validate-state
+  name: forgejo-runner-ci-state
   namespace: {{ .Values.namespace.name }}
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: {{ .Values.validate.state.storageClassName }}
+  storageClassName: {{ .Values.ci.state.storageClassName }}
   resources:
     requests:
-      storage: {{ .Values.validate.state.size }}
+      storage: {{ .Values.ci.state.size }}
 ---
 {{- end }}
 {{- if .Values.builder.enabled }}

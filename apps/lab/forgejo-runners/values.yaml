@@ -21,12 +21,12 @@ images:
 runnerDefaults:
   capacity: 1
 
-validate:
-  name: forgejo-runner-validate
+ci:
+  name: forgejo-runner-ci
   enabled: true
-  credentialsSecretName: forgejo-runner-validate-credentials
+  credentialsSecretName: forgejo-runner-ci-credentials
   labels:
-    - docker:docker://node:current-trixie
+    - ci:docker://node:current-trixie
   runnerDockerHost: tcp://127.0.0.1:2375
   containerOptions: ""
   resources:
