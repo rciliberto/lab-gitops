@@ -1,0 +1,100 @@
+namespace:
+  name: forgejo-runners
+
+forgejo:
+  instanceUrl: https://code2.ciliber.to/
+
+images:
+  runner:
+    repository: data.forgejo.org/forgejo/runner
+    tag: "11"
+    pullPolicy: IfNotPresent
+  dind:
+    repository: docker
+    tag: 29.2.1-dind
+    pullPolicy: IfNotPresent
+  dockerCli:
+    repository: docker
+    tag: 29.2.1-cli
+    pullPolicy: IfNotPresent
+
+runnerDefaults:
+  capacity: 1
+
+validate:
+  name: forgejo-runner-validate
+  enabled: true
+  tokenSecretName: forgejo-runner-validate-token
+  tokenSecretKey: token
+  labels:
+    - docker:docker://node:current-trixie
+  runnerDockerHost: tcp://127.0.0.1:2375
+  containerOptions: ""
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: "2"
+      memory: 2Gi
+  dind:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: "4"
+        memory: 8Gi
+  state:
+    storageClassName: nfs-csi
+    size: 1Gi
+
+builder:
+  name: forgejo-runner-image-builder
+  enabled: true
+  tokenSecretName: forgejo-runner-builder-token
+  tokenSecretKey: token
+  labels:
+    - image-builder:docker://node:current-trixie
+  runnerDockerHost: tcp://127.0.0.1:2375
+  jobDockerHost: tcp://dind.docker.internal:2375
+  pruneDockerHost: tcp://forgejo-runner-image-builder-dind:2375
+  containerOptions: "--add-host=dind.docker.internal:host-gateway"
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: "2"
+      memory: 2Gi
+  dind:
+    resources:
+      requests:
+        cpu: "1"
+        memory: 2Gi
+      limits:
+        cpu: "6"
+        memory: 12Gi
+  state:
+    storageClassName: nfs-csi
+    size: 1Gi
+  cache:
+    storageClassName: longhorn
+    size: 100Gi
+
+prune:
+  enabled: true
+  schedule: "17 3 * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  olderThan: 168h
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+networkPolicy:
+  enabled: true

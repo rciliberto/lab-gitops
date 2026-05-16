@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: forgejo-runner-config
+  namespace: {{ .Values.namespace.name }}
+data:
+  validate-config.yml: |
+    log:
+      level: info
+    runner:
+      file: /data/.runner
+      capacity: {{ .Values.runnerDefaults.capacity }}
+      envs: {}
+    cache:
+      enabled: true
+    container:
+      network: ""
+      privileged: false
+      docker_host: {{ .Values.validate.runnerDockerHost | quote }}
+      options: {{ .Values.validate.containerOptions | quote }}
+      force_pull: false
+  builder-config.yml: |
+    log:
+      level: info
+    runner:
+      file: /data/.runner
+      capacity: {{ .Values.runnerDefaults.capacity }}
+      envs:
+        DOCKER_HOST: {{ .Values.builder.jobDockerHost | quote }}
+    cache:
+      enabled: true
+    container:
+      network: ""
+      privileged: false
+      docker_host: {{ .Values.builder.runnerDockerHost | quote }}
+      options: {{ .Values.builder.containerOptions | quote }}
+      force_pull: false
+  run-runner.sh: |
+    #!/usr/bin/env sh
+    set -eu
+
+    if [ ! -s /data/.runner ]; then
+      forgejo-runner register \
+        --no-interactive \
+        --instance "${FORGEJO_INSTANCE_URL}" \
+        --token "${RUNNER_TOKEN}" \
+        --name "${RUNNER_NAME}" \
+        --labels "${RUNNER_LABELS}"
+    fi
+
+    exec forgejo-runner daemon --config "${RUNNER_CONFIG}"

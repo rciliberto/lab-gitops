@@ -1,0 +1,15 @@
+{{- if .Values.builder.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: forgejo-runner-image-builder-dind
+  namespace: {{ .Values.namespace.name }}
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: {{ .Values.builder.name }}
+  ports:
+    - name: docker
+      port: 2375
+      targetPort: docker
+{{- end }}

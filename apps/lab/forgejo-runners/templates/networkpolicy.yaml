@@ -1,0 +1,21 @@
+{{- if and .Values.builder.enabled .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: forgejo-runner-image-builder-dind
+  namespace: {{ .Values.namespace.name }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.builder.name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: forgejo-runner-image-builder-prune
+      ports:
+        - protocol: TCP
+          port: 2375
+{{- end }}

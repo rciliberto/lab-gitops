@@ -1,0 +1,42 @@
+{{- if .Values.validate.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forgejo-runner-validate-state
+  namespace: {{ .Values.namespace.name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.validate.state.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.validate.state.size }}
+---
+{{- end }}
+{{- if .Values.builder.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forgejo-runner-builder-state
+  namespace: {{ .Values.namespace.name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.builder.state.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.builder.state.size }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forgejo-runner-builder-docker-cache
+  namespace: {{ .Values.namespace.name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.builder.cache.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.builder.cache.size }}
+{{- end }}
