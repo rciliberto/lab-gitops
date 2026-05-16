@@ -3,4 +3,4 @@ name: forgejo-runners
 description: Forgejo Actions runners for the lab Forgejo instance
 type: application
 version: 1.0.0
-appVersion: "11"
+appVersion: "12"

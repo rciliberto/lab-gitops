@@ -25,10 +25,14 @@ spec:
           imagePullPolicy: {{ .Values.images.runner.pullPolicy }}
           command: ["/bin/sh", "/config/run-runner.sh"]
           env:
+            - name: FORGEJO_INSTANCE_URL
+              value: {{ .Values.forgejo.instanceUrl | quote }}
             - name: RUNNER_NAME
               value: {{ .Values.validate.name | quote }}
             - name: RUNNER_LABELS
               value: {{ join "," .Values.validate.labels | quote }}
+            - name: RUNNER_LABELS_JSON
+              value: {{ toJson .Values.validate.labels | quote }}
             - name: RUNNER_CONFIG_TEMPLATE
               value: /config/validate-config.yml
             - name: DOCKER_HOST

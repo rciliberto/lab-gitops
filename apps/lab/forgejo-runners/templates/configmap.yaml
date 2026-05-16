@@ -25,7 +25,7 @@ data:
         forgejo:
           url: {{ .Values.forgejo.instanceUrl | quote }}
           uuid: "${RUNNER_UUID}"
-          token: "${RUNNER_TOKEN}"
+          token_url: file:/credentials/token
   builder-config.yml: |
     log:
       level: info
@@ -48,16 +48,14 @@ data:
         forgejo:
           url: {{ .Values.forgejo.instanceUrl | quote }}
           uuid: "${RUNNER_UUID}"
-          token: "${RUNNER_TOKEN}"
+          token_url: file:/credentials/token
   run-runner.sh: |
     #!/usr/bin/env sh
     set -eu
 
     export RUNNER_UUID="$(cat /credentials/uuid)"
-    export RUNNER_TOKEN="$(cat /credentials/token)"
     sed \
       -e "s|\${RUNNER_UUID}|${RUNNER_UUID}|g" \
-      -e "s|\${RUNNER_TOKEN}|${RUNNER_TOKEN}|g" \
       "${RUNNER_CONFIG_TEMPLATE}" > /data/config.yml
 
     exec forgejo-runner daemon --config /data/config.yml

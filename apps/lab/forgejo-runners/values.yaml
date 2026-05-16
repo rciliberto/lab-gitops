@@ -7,7 +7,7 @@ forgejo:
 images:
   runner:
     repository: data.forgejo.org/forgejo/runner
-    tag: "11"
+    tag: "12"
     pullPolicy: IfNotPresent
   dind:
     repository: docker
