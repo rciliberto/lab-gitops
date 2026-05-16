@@ -6,7 +6,7 @@ metadata:
 spec:
   sourceRepos:
     - git@github.com:rciliberto/lab-gitops.git
-    - https://code2.ciliber.to/api/packages/*/helm
+    - https://code.ciliber.to/api/packages/*/helm
   destinations:
     - server: https://kubernetes.default.svc
       namespace: "*"

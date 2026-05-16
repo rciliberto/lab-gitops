@@ -32,7 +32,7 @@ metadata:
   name: forgejo-public
   namespace: forgejo
   annotations:
-    link.argocd.argoproj.io/external-link: https://code2.ciliber.to
+    link.argocd.argoproj.io/external-link: https://code.ciliber.to
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
@@ -41,7 +41,7 @@ spec:
       namespace: envoy-gateway-system
       sectionName: https-public
   hostnames:
-    - code2.ciliber.to
+    - code.ciliber.to
   rules:
     - backendRefs:
         - group: ""

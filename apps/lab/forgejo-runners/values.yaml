@@ -2,7 +2,7 @@ namespace:
   name: forgejo-runners
 
 forgejo:
-  instanceUrl: https://code2.ciliber.to/
+  instanceUrl: https://code.ciliber.to/
 
 images:
   runner:
