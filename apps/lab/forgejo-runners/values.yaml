@@ -53,7 +53,7 @@ builder:
   enabled: true
   credentialsSecretName: forgejo-runner-builder-credentials
   labels:
-    - image-builder:docker://node:current-trixie
+    - image-builder:docker://docker.gitea.com/runner-images:ubuntu-24.04
   runnerDockerHost: tcp://127.0.0.1:2375
   jobDockerHost: tcp://dind.docker.internal:2375
   pruneDockerHost: tcp://forgejo-runner-image-builder-dind:2375
