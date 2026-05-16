@@ -24,6 +24,7 @@ runnerDefaults:
 ci:
   name: forgejo-runner-ci
   enabled: true
+  capacity: 4
   credentialsSecretName: forgejo-runner-ci-credentials
   labels:
     - ci:docker://node:current-trixie
@@ -51,6 +52,7 @@ ci:
 builder:
   name: forgejo-runner-image-builder
   enabled: true
+  capacity: 1
   credentialsSecretName: forgejo-runner-builder-credentials
   labels:
     - image-builder:docker://docker.gitea.com/runner-images:ubuntu-24.04

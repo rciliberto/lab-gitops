@@ -8,7 +8,7 @@ data:
     log:
       level: info
     runner:
-      capacity: {{ .Values.runnerDefaults.capacity }}
+      capacity: {{ default .Values.runnerDefaults.capacity .Values.ci.capacity }}
       envs: {}
       labels:
 {{ toYaml .Values.ci.labels | indent 8 }}
@@ -30,7 +30,7 @@ data:
     log:
       level: info
     runner:
-      capacity: {{ .Values.runnerDefaults.capacity }}
+      capacity: {{ default .Values.runnerDefaults.capacity .Values.builder.capacity }}
       envs:
         DOCKER_HOST: {{ .Values.builder.jobDockerHost | quote }}
       labels:
