@@ -53,6 +53,19 @@ data:
     #!/usr/bin/env sh
     set -eu
 
+    for attempt in $(seq 1 60); do
+      if nc -z 127.0.0.1 2375; then
+        break
+      fi
+
+      if [ "${attempt}" -eq 60 ]; then
+        echo "Timed out waiting for Docker daemon on 127.0.0.1:2375" >&2
+        exit 1
+      fi
+
+      sleep 2
+    done
+
     export RUNNER_UUID="$(cat /credentials/uuid)"
     sed \
       -e "s|\${RUNNER_UUID}|${RUNNER_UUID}|g" \
