@@ -12,7 +12,7 @@ spec:
   clusterResourceWhitelist:
     - group: ""
       kind: Namespace
-    # Required by onedev chart for its service account RBAC
+    # Required by application charts that install service account RBAC
     - group: "rbac.authorization.k8s.io"
       kind: ClusterRole
     - group: "rbac.authorization.k8s.io"

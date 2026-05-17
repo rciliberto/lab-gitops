@@ -4,7 +4,7 @@ metadata:
   name: forgejo
   namespace: forgejo
   annotations:
-    link.argocd.argoproj.io/external-link: https://code2.lab.ciliber.to
+    link.argocd.argoproj.io/external-link: https://code.lab.ciliber.to
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
@@ -13,7 +13,7 @@ spec:
       namespace: envoy-gateway-system
       sectionName: https-lab
   hostnames:
-    - code2.lab.ciliber.to
+    - code.lab.ciliber.to
   rules:
     - backendRefs:
         - group: ""

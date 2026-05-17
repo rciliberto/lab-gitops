@@ -1,0 +1,123 @@
+forgejo:
+  namespaceOverride: launch-forgejo
+
+  replicaCount: 1
+  strategy:
+    type: Recreate
+
+  image:
+    rootless: true
+
+  service:
+    http:
+      type: ClusterIP
+      port: 3000
+    ssh:
+      type: ClusterIP
+      port: 22
+
+  persistence:
+    enabled: true
+    create: true
+    mount: true
+    claimName: forgejo-shared-storage
+    size: 200Gi
+    accessModes:
+      - ReadWriteOnce
+    storageClass: nfs-csi
+    annotations:
+      helm.sh/resource-policy: keep
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 2
+      memory: 2Gi
+
+  gitea:
+    admin:
+      existingSecret: forgejo-admin-credentials
+      email: forgejo@launchboats.dev
+      passwordMode: initialOnlyNoReset
+
+    additionalConfigFromEnvs:
+      - name: FORGEJO__DATABASE__PASSWD
+        valueFrom:
+          secretKeyRef:
+            name: launch-forgejo-db-app
+            key: password
+      - name: FORGEJO__CACHE__HOST
+        valueFrom:
+          secretKeyRef:
+            name: forgejo-redis-secret
+            key: cache-host
+      - name: FORGEJO__SESSION__PROVIDER_CONFIG
+        valueFrom:
+          secretKeyRef:
+            name: forgejo-redis-secret
+            key: session-provider-config
+      - name: FORGEJO__QUEUE__CONN_STR
+        valueFrom:
+          secretKeyRef:
+            name: forgejo-redis-secret
+            key: queue-conn-str
+
+    config:
+      APP_NAME: Launch Forgejo
+      RUN_MODE: prod
+
+      server:
+        DOMAIN: code.launchboats.dev
+        SSH_DOMAIN: code.launchboats.dev
+        ROOT_URL: https://code.launchboats.dev/
+        SSH_PORT: 22
+        SSH_LISTEN_PORT: 2222
+        OFFLINE_MODE: true
+        START_SSH_SERVER: true
+
+      database:
+        DB_TYPE: postgres
+        HOST: launch-forgejo-db-rw.launch-forgejo.svc.cluster.local:5432
+        NAME: forgejo
+        USER: forgejo
+        SSL_MODE: disable
+
+      security:
+        INSTALL_LOCK: true
+        DISABLE_GIT_HOOKS: true
+
+      service:
+        DISABLE_REGISTRATION: true
+
+      storage:
+        STORAGE_TYPE: local
+
+      cache:
+        ADAPTER: redis
+
+      session:
+        PROVIDER: redis
+
+      queue:
+        TYPE: redis
+
+      actions:
+        ENABLED: true
+
+      packages:
+        ENABLED: true
+
+      mailer:
+        ENABLED: true
+        PROTOCOL: smtp
+        SMTP_ADDR: smtp-relay.smtp-relay.svc.cluster.local
+        SMTP_PORT: 25
+        FROM: forgejo@launchboats.dev
+
+  # Forgejo Actions are enabled in app.ini. The official forgejo chart 17.0.1
+  # does not ship an actions-runner subchart, so the runner must be added as a
+  # separate resource after an instance-level runner token exists.
+  test:
+    enabled: true
