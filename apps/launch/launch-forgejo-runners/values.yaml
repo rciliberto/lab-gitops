@@ -1,0 +1,101 @@
+namespace:
+  name: launch-forgejo-runners
+
+forgejo:
+  instanceUrl: https://code.launchboats.dev/
+
+images:
+  runner:
+    repository: data.forgejo.org/forgejo/runner
+    tag: "12"
+    pullPolicy: IfNotPresent
+  dind:
+    repository: docker
+    tag: 29.2.1-dind
+    pullPolicy: IfNotPresent
+  dockerCli:
+    repository: docker
+    tag: 29.2.1-cli
+    pullPolicy: IfNotPresent
+
+runnerDefaults:
+  capacity: 1
+
+ci:
+  name: launch-forgejo-runner-ci
+  enabled: true
+  capacity: 4
+  credentialsSecretName: launch-forgejo-runner-ci-credentials
+  labels:
+    - ci:docker://node:current-trixie
+  runnerDockerHost: tcp://127.0.0.1:2375
+  containerOptions: ""
+  resources:
+    requests:
+      cpu: "1"
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 4Gi
+  dind:
+    resources:
+      requests:
+        cpu: "4"
+        memory: 8Gi
+      limits:
+        cpu: "16"
+        memory: 32Gi
+  state:
+    storageClassName: nfs-csi
+    size: 1Gi
+
+builder:
+  name: launch-forgejo-runner-image-builder
+  enabled: true
+  capacity: 1
+  credentialsSecretName: launch-forgejo-runner-builder-credentials
+  labels:
+    - image-builder:docker://docker.gitea.com/runner-images:ubuntu-24.04
+  runnerDockerHost: tcp://127.0.0.1:2375
+  jobDockerHost: tcp://dind.docker.internal:2375
+  pruneDockerHost: tcp://launch-forgejo-runner-image-builder-dind:2375
+  containerOptions: "--add-host=dind.docker.internal:host-gateway"
+  resources:
+    requests:
+      cpu: "1"
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 4Gi
+  dind:
+    resources:
+      requests:
+        cpu: "2"
+        memory: 8Gi
+      limits:
+        cpu: "8"
+        memory: 24Gi
+  state:
+    storageClassName: nfs-csi
+    size: 1Gi
+  cache:
+    enabled: false
+    storageClassName: longhorn
+    size: 100Gi
+
+prune:
+  enabled: true
+  schedule: "17 3 * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  olderThan: 168h
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+networkPolicy:
+  enabled: true

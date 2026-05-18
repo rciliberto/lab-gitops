@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: forgejo-runner-config
+  namespace: {{ .Values.namespace.name }}
+data:
+  ci-config.yml: |
+    log:
+      level: info
+    runner:
+      capacity: {{ default .Values.runnerDefaults.capacity .Values.ci.capacity }}
+      envs: {}
+      labels:
+{{ toYaml .Values.ci.labels | indent 8 }}
+    cache:
+      enabled: true
+    container:
+      network: ""
+      privileged: false
+      docker_host: {{ .Values.ci.runnerDockerHost | quote }}
+      options: {{ .Values.ci.containerOptions | quote }}
+      force_pull: false
+    server:
+      connections:
+        forgejo:
+          url: {{ .Values.forgejo.instanceUrl | quote }}
+          uuid: "${RUNNER_UUID}"
+          token_url: file:/credentials/token
+  builder-config.yml: |
+    log:
+      level: info
+    runner:
+      capacity: {{ default .Values.runnerDefaults.capacity .Values.builder.capacity }}
+      envs:
+        DOCKER_HOST: {{ .Values.builder.jobDockerHost | quote }}
+      labels:
+{{ toYaml .Values.builder.labels | indent 8 }}
+    cache:
+      enabled: true
+    container:
+      network: ""
+      privileged: false
+      docker_host: {{ .Values.builder.runnerDockerHost | quote }}
+      options: {{ .Values.builder.containerOptions | quote }}
+      force_pull: false
+    server:
+      connections:
+        forgejo:
+          url: {{ .Values.forgejo.instanceUrl | quote }}
+          uuid: "${RUNNER_UUID}"
+          token_url: file:/credentials/token
+  run-runner.sh: |
+    #!/usr/bin/env sh
+    set -eu
+
+    for attempt in $(seq 1 60); do
+      if nc -z 127.0.0.1 2375; then
+        break
+      fi
+
+      if [ "${attempt}" -eq 60 ]; then
+        echo "Timed out waiting for Docker daemon on 127.0.0.1:2375" >&2
+        exit 1
+      fi
+
+      sleep 2
+    done
+
+    export RUNNER_UUID="$(cat /credentials/uuid)"
+    sed \
+      -e "s|\${RUNNER_UUID}|${RUNNER_UUID}|g" \
+      "${RUNNER_CONFIG_TEMPLATE}" > /data/config.yml
+
+    exec forgejo-runner daemon --config /data/config.yml

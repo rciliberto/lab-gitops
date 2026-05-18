@@ -1,0 +1,6 @@
+apiVersion: v2
+name: forgejo-runners
+description: Forgejo Actions runners for the launch Forgejo instance
+type: application
+version: 1.0.0
+appVersion: "12"

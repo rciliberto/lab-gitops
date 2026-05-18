@@ -1,0 +1,44 @@
+{{- if .Values.ci.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forgejo-runner-ci-state
+  namespace: {{ .Values.namespace.name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.ci.state.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.ci.state.size }}
+---
+{{- end }}
+{{- if .Values.builder.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forgejo-runner-builder-state
+  namespace: {{ .Values.namespace.name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.builder.state.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.builder.state.size }}
+{{- if .Values.builder.cache.enabled }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forgejo-runner-builder-docker-cache
+  namespace: {{ .Values.namespace.name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.builder.cache.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.builder.cache.size }}
+{{- end }}
+{{- end }}
