@@ -88,6 +88,11 @@ forgejo:
         INSTALL_LOCK: true
         DISABLE_GIT_HOOKS: true
 
+      migrations:
+        ALLOW_LOCALNETWORKS: true
+        ALLOWED_DOMAINS: code.launchboats.dev,forgejo-http.launch-forgejo.svc.cluster.local
+        BLOCKED_DOMAINS:
+
       service:
         DISABLE_REGISTRATION: true
 
