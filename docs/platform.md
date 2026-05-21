@@ -17,6 +17,17 @@
 - Tenant apps: `tenant-<person>-<app>` (e.g., `tenant-dchen-actual-budget`)
 - Launch apps: `launch-<app>` (e.g., `launch-forgejo`)
 
+## Router BGP
+
+MetalLB peers with the UniFi Dream Machine Pro at `10.20.20.1` using:
+
+- UniFi/router ASN: `64501`
+- Kubernetes/MetalLB ASN: `64500`
+- MetalLB LoadBalancer pool: `10.30.0.2-10.30.0.255`
+- Imported route filter: `10.30.0.0/24 le 32`
+
+Upload [unifi-metallb-bgp.conf](unifi-metallb-bgp.conf) in UniFi Network under Dynamic Routing > BGP. The config accepts only MetalLB service routes and advertises no routes back to the cluster.
+
 ## Adding an App
 
 Create a directory under the appropriate category:
