@@ -24,7 +24,7 @@ runnerDefaults:
 ci:
   name: launch-forgejo-runner-ci
   enabled: true
-  capacity: 4
+  capacity: 6
   credentialsSecretName: launch-forgejo-runner-ci-credentials
   labels:
     - ci:docker://node:current-trixie
