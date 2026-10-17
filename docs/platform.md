@@ -2,6 +2,8 @@
 
 ## ArgoCD Projects
 
+The ArgoCD UI is at `argocd.lab.ciliber.to`.
+
 | Project | Source Path | Allowed Namespaces | Cluster-Scoped Resources |
 |---------|------------|-------------------|------------------------|
 | `platform` | `platform/*` | Any | Yes |
