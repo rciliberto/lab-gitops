@@ -6,5 +6,5 @@ appVersion: "1.0.0"
 dependencies:
   # https://artifacthub.io/packages/helm/csi-driver-nfs/csi-driver-nfs
   - name: csi-driver-nfs
-    version: 4.13.2
+    version: 4.13.5
     repository: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
