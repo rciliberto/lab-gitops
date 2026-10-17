@@ -7,4 +7,4 @@ dependencies:
   # https://artifacthub.io/packages/helm/bitnami-labs/sealed-secrets
   - name: sealed-secrets
     version: 2.18.5
-    repository: https://bitnami-labs.github.io/sealed-secrets
+    repository: https://bitnami.github.io/sealed-secrets

@@ -3,10 +3,31 @@
   "extends": [
     "config:recommended"
   ],
+  "prHourlyLimit": 0,
   "kubernetes": {
     "managerFilePatterns": [
       "/\\.yml$/",
-      "/\\.yaml/"
+      "/\\.yaml$/"
     ]
-  }
+  },
+  "packageRules": [
+    {
+      "description": "Automerge minor and patch updates. There is no CI in this repo, so don't wait for status checks.",
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^v?0\\./",
+      "automerge": true,
+      "automergeType": "pr",
+      "ignoreTests": true,
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "Pre-1.0 patch updates are safe to automerge, but pre-1.0 minor bumps can break, so they stay as PRs.",
+      "matchUpdateTypes": ["patch"],
+      "matchCurrentVersion": "/^v?0\\./",
+      "automerge": true,
+      "automergeType": "pr",
+      "ignoreTests": true,
+      "minimumReleaseAge": "3 days"
+    }
+  ]
 }
