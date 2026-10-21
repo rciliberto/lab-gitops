@@ -28,6 +28,11 @@
       "automergeType": "pr",
       "ignoreTests": true,
       "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "Longhorn only supports upgrading one minor version at a time, so propose each minor separately.",
+      "matchPackageNames": ["longhorn"],
+      "separateMultipleMinor": true
     }
   ]
 }
