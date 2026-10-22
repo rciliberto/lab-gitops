@@ -5,6 +5,11 @@ metadata:
   namespace: forgejo
 spec:
   instances: 1
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: forgejo-db-backup
   storage:
     storageClass: longhorn
     size: 5Gi

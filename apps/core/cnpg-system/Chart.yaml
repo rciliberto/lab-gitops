@@ -8,3 +8,8 @@ dependencies:
   - name: cloudnative-pg
     version: 0.29.1
     repository: https://cloudnative-pg.github.io/charts
+  # https://artifacthub.io/packages/helm/cloudnative-pg/plugin-barman-cloud
+  # Must live in the operator's namespace. Its certificates come from cert-manager.
+  - name: plugin-barman-cloud
+    version: 0.8.1
+    repository: https://cloudnative-pg.github.io/charts

@@ -38,6 +38,101 @@ mkdir -p apps/lab/my-app/templates
 
 Add `Chart.yaml`, `values.yaml`, and `templates/namespace.yaml` at minimum. Commit and push — ArgoCD discovers and syncs automatically. No config files to update.
 
+## Postgres Backups
+
+CNPG clusters back up with the [Barman Cloud plugin](https://cloudnative-pg.io/plugin-barman-cloud/) (installed with the operator in `cnpg-system`) to a [Garage](https://garagehq.deuxfleurs.fr/) S3 server running in Container Manager on orca, at `http://orca.ciliber.to:3900`. Garage keeps its data in `/volume1/kubernetes-backup/s3`, so Snapshot Replication copies it to volume 3 with the other backups.
+
+Each cluster archives WAL continuously (at most 5 minutes behind) and takes a base backup daily at 01:00 UTC, keeping 30 days, so it can be restored to any point in that window. Each cluster has its own bucket and key, and the key is in a `cnpg-backup-s3` SealedSecret next to the cluster.
+
+### Garage on orca
+
+`/volume1/docker/garage/garage.toml`:
+
+```toml
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "sqlite"
+metadata_auto_snapshot_interval = "6h"
+replication_factor = 1
+
+rpc_bind_addr = "0.0.0.0:3901"
+rpc_public_addr = "127.0.0.1:3901"
+rpc_secret = "<openssl rand -hex 32>"
+
+[s3_api]
+# boto3 (Barman) signs with us-east-1 unless told otherwise.
+s3_region = "us-east-1"
+api_bind_addr = "0.0.0.0:3900"
+```
+
+Container Manager project at `/volume1/docker/garage`, `compose.yaml`:
+
+```yaml
+services:
+  garage:
+    image: dxflrs/garage:v2.4.1
+    container_name: garage
+    restart: unless-stopped
+    ports:
+      - "3900:3900"
+    volumes:
+      - /volume1/docker/garage/garage.toml:/etc/garage.toml:ro
+      - /volume1/kubernetes-backup/s3/meta:/var/lib/garage/meta
+      - /volume1/kubernetes-backup/s3/data:/var/lib/garage/data
+```
+
+One-time layout, then a bucket and key per cluster (over SSH on orca):
+
+```sh
+sudo docker exec garage /garage status   # note the node ID
+sudo docker exec garage /garage layout assign -z orca -c 1T <node-id>
+sudo docker exec garage /garage layout apply --version 1
+for b in cnpg-forgejo cnpg-launch-forgejo cnpg-dsl-dashboard; do
+  sudo docker exec garage /garage bucket create "$b"
+  sudo docker exec garage /garage key create "$b"
+  sudo docker exec garage /garage bucket allow --read --write --owner "$b" --key "$b"
+done
+sudo docker exec garage /garage key info --show-secret cnpg-forgejo   # key ID and secret
+```
+
+### Adding backups to a cluster
+
+1. Create a bucket and key in Garage as above.
+2. Seal the key into the app's `templates/sealed-secrets.yaml`:
+   ```sh
+   echo --- >> apps/<category>/<app>/templates/sealed-secrets.yaml
+   kubectl create secret generic cnpg-backup-s3 -n <namespace> \
+     --from-literal=ACCESS_KEY_ID=<key id> --from-literal=ACCESS_SECRET_KEY=<secret> \
+     --dry-run=client -o yaml | kubeseal --cert sealed-secrets.crt -o yaml \
+     >> apps/<category>/<app>/templates/sealed-secrets.yaml
+   ```
+3. Copy `templates/cnpg-backup.yaml` from `apps/lab/forgejo` (an `ObjectStore` and a `ScheduledBackup`) and add the `plugins` block to the `Cluster`, as in `apps/lab/forgejo/templates/cnpg-cluster.yaml`.
+
+The secret must exist before the `Cluster` change syncs. Without it WAL archiving fails and WAL piles up on the volume until it fills.
+
+### Restoring
+
+Restore into a new cluster (a different name, or the same name after deleting the old one and moving its bucket contents aside, since Barman refuses to archive into a non-empty path):
+
+```yaml
+spec:
+  bootstrap:
+    recovery:
+      source: origin
+      # Optional point in time; without it, recovery replays all archived WAL.
+      recoveryTarget:
+        targetTime: "2026-10-22 12:00:00+00"
+  externalClusters:
+    - name: origin
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: forgejo-db-backup
+          serverName: forgejo-db
+```
+
+If the cluster is gone, start Garage on any Docker host from the replicated `s3` folder and point an `ObjectStore` at it.
+
 ## Fresh Cluster Bootstrap
 
 1. Install Cilium (ArgoCD needs a CNI to run; ArgoCD adopts this release later):

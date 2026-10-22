@@ -1,0 +1,49 @@
+# Base backups and WAL archive for dsl-dashboard-db, kept in the cnpg-dsl-dashboard bucket on the
+# Garage S3 server on orca. Credentials come from the cnpg-backup-s3 SealedSecret.
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: dsl-dashboard-db-backup
+  namespace: dsl-dashboard
+  annotations:
+    # The CRD comes from the barman-cloud plugin in cnpg-system.
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  retentionPolicy: 30d
+  configuration:
+    destinationPath: s3://cnpg-dsl-dashboard/
+    endpointURL: http://orca.ciliber.to:3900
+    s3Credentials:
+      accessKeyId:
+        name: cnpg-backup-s3
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: cnpg-backup-s3
+        key: ACCESS_SECRET_KEY
+    wal:
+      compression: gzip
+    data:
+      compression: gzip
+  instanceSidecarConfiguration:
+    env:
+      # Newer boto3 sends checksum headers that not every S3 server accepts.
+      - name: AWS_REQUEST_CHECKSUM_CALCULATION
+        value: when_required
+      - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+        value: when_required
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: dsl-dashboard-db-daily
+  namespace: dsl-dashboard
+spec:
+  # Daily at 01:00 UTC, before the etcd (02:30) and Longhorn (03:00) backups.
+  schedule: "0 0 1 * * *"
+  immediate: true
+  backupOwnerReference: self
+  cluster:
+    name: dsl-dashboard-db
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
