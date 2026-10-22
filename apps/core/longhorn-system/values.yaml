@@ -6,6 +6,8 @@ longhorn:
     defaultReplicaCount: 3
     guaranteedInstanceManagerCPU: 0
     storageOverProvisioningPercentage: 200
+    # Upgrade volume engines automatically after a Longhorn upgrade, one volume per node at a time.
+    concurrentAutomaticEngineUpgradePerNodeLimit: 1
   persistence:
     defaultClass: true
     defaultClassReplicaCount: 3
