@@ -19,3 +19,18 @@ spec:
         - protocol: TCP
           port: 2375
 {{- end }}
+{{- if and .Values.ci.enabled .Values.networkPolicy.enabled }}
+---
+# The ci pod serves nothing, so deny all ingress to it.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Values.ci.name }}-deny-ingress
+  namespace: {{ .Values.namespace.name }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.ci.name }}
+  policyTypes:
+    - Ingress
+{{- end }}

@@ -58,7 +58,8 @@ spec:
         - name: dind
           image: "{{ .Values.images.dind.repository }}:{{ .Values.images.dind.tag }}"
           imagePullPolicy: {{ .Values.images.dind.pullPolicy }}
-          args: ["dockerd", "-H", "tcp://0.0.0.0:2375", "--tls=false"]
+          # The runner shares the pod network, so the daemon only needs loopback.
+          args: ["dockerd", "-H", "tcp://127.0.0.1:2375", "--tls=false"]
           env:
             - name: DOCKER_TLS_CERTDIR
               value: ""
