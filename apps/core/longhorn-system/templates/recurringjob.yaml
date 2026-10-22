@@ -1,0 +1,27 @@
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: daily-backup
+  namespace: longhorn-system
+spec:
+  task: backup
+  cron: "0 3 * * *"
+  groups:
+    - default
+  retain: 7
+  concurrency: 2
+---
+# Longhorn's own settings and volume definitions, for restoring Longhorn on a rebuilt cluster.
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: weekly-system-backup
+  namespace: longhorn-system
+spec:
+  task: system-backup
+  cron: "0 4 * * 0"
+  groups: []
+  retain: 4
+  concurrency: 1
+  parameters:
+    volume-backup-policy: disabled
