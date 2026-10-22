@@ -19,14 +19,14 @@
 
 ## Router BGP
 
-MetalLB peers with the UniFi Dream Machine Pro at `10.20.20.1` using:
+Cilium's BGP control plane peers with the UniFi Dream Machine Pro at `10.20.20.1` from every node (`apps/core/cilium/templates/bgp.yaml`):
 
 - UniFi/router ASN: `64501`
-- Kubernetes/MetalLB ASN: `64500`
-- MetalLB LoadBalancer pool: `10.30.0.2-10.30.0.255`
+- Kubernetes/Cilium ASN: `64500`
+- LoadBalancer pool (`CiliumLoadBalancerIPPool`): `10.30.0.2-10.30.0.255`
 - Imported route filter: `10.30.0.0/24 le 32`
 
-Upload [unifi-metallb-bgp.conf](unifi-metallb-bgp.conf) in UniFi Network under Dynamic Routing > BGP. The config accepts only MetalLB service routes and advertises no routes back to the cluster.
+Upload [unifi-metallb-bgp.conf](unifi-metallb-bgp.conf) in UniFi Network under Dynamic Routing > BGP. It was written for MetalLB, but the ASNs, neighbors and prefixes are the same. The config accepts only LoadBalancer service routes and advertises no routes back to the cluster.
 
 ## Adding an App
 
@@ -40,16 +40,22 @@ Add `Chart.yaml`, `values.yaml`, and `templates/namespace.yaml` at minimum. Comm
 
 ## Fresh Cluster Bootstrap
 
-1. Install ArgoCD:
+1. Install Cilium (ArgoCD needs a CNI to run; ArgoCD adopts this release later):
+   ```sh
+   helm dependency build apps/core/cilium
+   helm install cilium apps/core/cilium -n cilium --create-namespace
+   ```
+   The BGP and LoadBalancer pool resources need CRDs that the Cilium operator creates on startup, so remove `templates/bgp.yaml` for this first install (or re-run it once the operator is up); ArgoCD applies them later.
+2. Install ArgoCD:
    ```sh
    helm install argocd argo-cd --repo https://argoproj.github.io/argo-helm -n argocd --create-namespace
    ```
-2. Apply the root ApplicationSet:
+3. Apply the root ApplicationSet:
    ```sh
    kubectl apply -f bootstrap/applicationset.yaml
    ```
-3. ArgoCD syncs `platform/*` — creates AppProjects, ApplicationSets, and its own full config.
-4. ApplicationSets discover and sync all apps from `apps/core/*`, `apps/lab/*`, `apps/tenants/*`, `apps/launch/*`.
+4. ArgoCD syncs `platform/*` — creates AppProjects, ApplicationSets, and its own full config.
+5. ApplicationSets discover and sync all apps from `apps/core/*`, `apps/lab/*`, `apps/tenants/*`, `apps/launch/*`.
 
 ## Migration from Single ApplicationSet
 
