@@ -6,7 +6,8 @@ longhorn:
     defaultReplicaCount: 3
     guaranteedInstanceManagerCPU: 0
     storageOverProvisioningPercentage: 200
-    backupTarget: ""
   persistence:
     defaultClass: true
     defaultClassReplicaCount: 3
+  defaultBackupStore:
+    backupTarget: nfs://orca.ciliber.to:/volume1/longhorn-backup
