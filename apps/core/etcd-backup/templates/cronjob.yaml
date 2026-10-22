@@ -1,0 +1,63 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: etcd-snapshot
+  namespace: etcd-backup
+spec:
+  schedule: {{ .Values.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: OnFailure
+          # Talos API access from pods is served on control plane nodes.
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: ""
+          tolerations:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+              effect: NoSchedule
+          initContainers:
+            - name: snapshot
+              image: {{ .Values.images.talosctl }}
+              args:
+                - --nodes
+                - {{ .Values.node | quote }}
+                - etcd
+                - snapshot
+                - /work/etcd.snapshot
+              volumeMounts:
+                - name: talos-secrets
+                  mountPath: /var/run/secrets/talos.dev
+                - name: work
+                  mountPath: /work
+          containers:
+            - name: store
+              image: {{ .Values.images.busybox }}
+              command:
+                - sh
+                - -euc
+                - |
+                  dest="/backup/etcd-$(date -u +%Y%m%dT%H%M%SZ).snapshot"
+                  cp /work/etcd.snapshot "$dest"
+                  echo "saved $dest ($(du -h "$dest" | cut -f1))"
+                  find /backup -name 'etcd-*.snapshot' -mtime +{{ .Values.retainDays }} -print -delete
+              volumeMounts:
+                - name: work
+                  mountPath: /work
+                - name: backup
+                  mountPath: /backup
+          volumes:
+            - name: talos-secrets
+              secret:
+                secretName: etcd-backup
+            - name: work
+              emptyDir: {}
+            - name: backup
+              nfs:
+                server: {{ .Values.nfs.server }}
+                path: {{ .Values.nfs.path }}

@@ -1,0 +1,13 @@
+# Talos API endpoint to snapshot from. The VIP always lands on a healthy control plane node.
+node: 10.20.20.2
+
+schedule: "30 2 * * *"
+retainDays: 14
+
+nfs:
+  server: orca.ciliber.to
+  path: /volume1/kubernetes-backup/etcd
+
+images:
+  talosctl: ghcr.io/siderolabs/talosctl:v1.12.6
+  busybox: busybox:1.37.0
