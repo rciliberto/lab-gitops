@@ -33,6 +33,11 @@
       "description": "Longhorn only supports upgrading one minor version at a time, so propose each minor separately.",
       "matchPackageNames": ["longhorn"],
       "separateMultipleMinor": true
+    },
+    {
+      "description": "Cilium is the CNI; a bad upgrade takes down all pod networking, so review bumps by hand.",
+      "matchPackageNames": ["cilium"],
+      "automerge": false
     }
   ]
 }

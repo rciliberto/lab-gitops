@@ -1,0 +1,62 @@
+cilium:
+  namespaceOverride: cilium
+
+  # Keep the per-node pod CIDRs Kubernetes already assigned (10.244.0.0/16).
+  ipam:
+    mode: kubernetes
+
+  # Replaces kube-proxy. Talos serves the API server on every node through KubePrism.
+  kubeProxyReplacement: true
+  k8sServiceHost: localhost
+  k8sServicePort: 7445
+
+  # Talos-specific: no SYS_MODULE, and cgroups are already mounted by the OS.
+  securityContext:
+    capabilities:
+      ciliumAgent:
+        - CHOWN
+        - KILL
+        - NET_ADMIN
+        - NET_RAW
+        - IPC_LOCK
+        - SYS_ADMIN
+        - SYS_RESOURCE
+        - DAC_OVERRIDE
+        - FOWNER
+        - SETGID
+        - SETUID
+      cleanCiliumState:
+        - NET_ADMIN
+        - SYS_ADMIN
+        - SYS_RESOURCE
+  cgroup:
+    autoMount:
+      enabled: false
+    hostRoot: /sys/fs/cgroup
+
+  # Required with Talos hostDNS forwardKubeDNSToHost.
+  bpf:
+    hostLegacyRouting: true
+
+  # Envoy Gateway stays the Gateway API implementation.
+  gatewayAPI:
+    enabled: false
+
+  # Takes over from MetalLB in a follow-up change, once Cilium is the CNI.
+  bgpControlPlane:
+    enabled: true
+    secretsNamespace:
+      name: cilium
+
+  # Log policy drops instead of enforcing them for the first days after the cutover.
+  # Check `hubble observe --verdict AUDIT`, then set this to false.
+  policyAuditMode: true
+
+  operator:
+    replicas: 2
+
+  hubble:
+    relay:
+      enabled: true
+    ui:
+      enabled: true
