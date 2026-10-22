@@ -38,6 +38,21 @@
       "description": "Cilium is the CNI; a bad upgrade takes down all pod networking, so review bumps by hand.",
       "matchPackageNames": ["cilium"],
       "automerge": false
+    },
+    {
+      "description": "Gateway API CRDs must match what Cilium supports, so review bumps by hand.",
+      "matchPackageNames": ["kubernetes-sigs/gateway-api"],
+      "automerge": false
+    }
+  ],
+  "customManagers": [
+    {
+      "description": "Gateway API CRDs are installed from the upstream release bundle.",
+      "customType": "regex",
+      "managerFilePatterns": ["/(^|/)apps/core/gateway-api/kustomization\\.yaml$/"],
+      "matchStrings": ["https://github\\.com/kubernetes-sigs/gateway-api/releases/download/(?<currentValue>v[^/]+)/"],
+      "depNameTemplate": "kubernetes-sigs/gateway-api",
+      "datasourceTemplate": "github-releases"
     }
   ]
 }

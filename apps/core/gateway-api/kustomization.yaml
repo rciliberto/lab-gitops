@@ -1,0 +1,10 @@
+# Gateway API CRDs. These used to come with the Envoy Gateway chart; this is the same
+# version and channel (experimental), so adopting them changes nothing in the cluster.
+# Cilium needs them installed before it starts, and deleting them deletes every Gateway
+# and route, so Argo CD must never prune or delete them.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.1/experimental-install.yaml
+commonAnnotations:
+  argocd.argoproj.io/sync-options: Prune=false,Delete=false
