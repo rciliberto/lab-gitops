@@ -10,4 +10,4 @@ longhorn:
     defaultClass: true
     defaultClassReplicaCount: 3
   defaultBackupStore:
-    backupTarget: nfs://orca.ciliber.to:/volume2/kubernetes-backup/longhorn
+    backupTarget: nfs://orca.ciliber.to:/volume1/kubernetes-backup/longhorn
