@@ -48,6 +48,10 @@ cilium:
     secretsNamespace:
       name: cilium
 
+  # Log policy drops instead of enforcing them for the first days after the cutover.
+  # Check `hubble observe --verdict AUDIT`, then set this to false.
+  policyAuditMode: true
+
   operator:
     replicas: 2
 
