@@ -5,6 +5,8 @@ metadata:
   namespace: launch-forgejo
 spec:
   instances: 1
+  # With one instance the PDB can never be satisfied, so it only blocks node drains.
+  enablePDB: false
   storage:
     storageClass: longhorn
     size: 5Gi

@@ -60,3 +60,16 @@ cilium:
       enabled: true
     ui:
       enabled: true
+    # The default "helm" method regenerates the certs on every render, which Argo
+    # shows as permanent drift. certgen creates them in-cluster instead.
+    tls:
+      auto:
+        method: cronJob
+
+  # Run certgen after Argo's sync and prune, so pruning the old Helm-rendered
+  # secrets can't delete the ones certgen just wrote.
+  certgen:
+    annotations:
+      job:
+        argocd.argoproj.io/hook: PostSync
+        argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
