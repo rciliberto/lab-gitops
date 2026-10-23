@@ -1,4 +1,4 @@
-apiVersion: gateway.networking.k8s.io/v1alpha2
+apiVersion: gateway.networking.k8s.io/v1
 kind: TCPRoute
 metadata:
   name: forgejo-ssh
@@ -7,6 +7,9 @@ spec:
   parentRefs:
     - name: lab-gateway
       namespace: envoy-gateway-system
+      sectionName: ssh-alt
+    - name: lab-gateway
+      namespace: gateway
       sectionName: ssh-alt
   rules:
     - backendRefs:
