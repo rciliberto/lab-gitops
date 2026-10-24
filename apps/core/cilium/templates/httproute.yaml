@@ -14,6 +14,11 @@ spec:
       name: lab-gateway
       namespace: envoy-gateway-system
       sectionName: https-lab
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: lab-gateway
+      namespace: gateway
+      sectionName: https-lab
   hostnames:
     - hubble.lab.ciliber.to
   rules:

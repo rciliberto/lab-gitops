@@ -12,6 +12,11 @@ spec:
       name: lab-gateway
       namespace: envoy-gateway-system
       sectionName: https-lab
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: lab-gateway
+      namespace: gateway
+      sectionName: https-lab
   hostnames:
     - dc-budget.lab.ciliber.to
   rules:
@@ -39,6 +44,11 @@ spec:
       kind: Gateway
       name: lab-gateway
       namespace: envoy-gateway-system
+      sectionName: https-public
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: lab-gateway
+      namespace: gateway
       sectionName: https-public
   hostnames:
     - dc-budget.ciliber.to

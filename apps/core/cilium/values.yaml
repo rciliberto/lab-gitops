@@ -38,9 +38,10 @@ cilium:
   bpf:
     hostLegacyRouting: true
 
-  # Envoy Gateway stays the Gateway API implementation.
+  # Serves the lab-gateway Gateway (apps/core/gateway). Needs the CRDs from apps/core/gateway-api
+  # to exist when the operator starts.
   gatewayAPI:
-    enabled: false
+    enabled: true
 
   # Takes over from MetalLB in a follow-up change, once Cilium is the CNI.
   bgpControlPlane:

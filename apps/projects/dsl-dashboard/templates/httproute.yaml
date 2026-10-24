@@ -13,6 +13,11 @@ spec:
       name: lab-gateway
       namespace: envoy-gateway-system
       sectionName: https-dslstats
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: lab-gateway
+      namespace: gateway
+      sectionName: https-dslstats
   hostnames:
     - dslstats.com
   rules:
