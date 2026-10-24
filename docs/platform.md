@@ -14,7 +14,7 @@
 
 - Namespace = directory name for all apps
 - Personal apps: natural names (e.g., `actual-budget`)
-- Tenant apps: `tenant-<person>-<app>` (e.g., `tenant-dchen-actual-budget`)
+- Tenant apps: `tenant-<person>-<app>` (e.g., `tenant-dyc-actual-budget`)
 - Launch apps: `launch-<app>` (e.g., `launch-forgejo`)
 
 ## Router BGP

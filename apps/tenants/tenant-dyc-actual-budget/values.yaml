@@ -1,0 +1,14 @@
+actualbudget:
+  # RWO Longhorn volume: stop the old pod before starting the new one so a
+  # rollout never needs the volume attached on two nodes at once.
+  strategy:
+    type: Recreate
+  persistence:
+    enabled: true
+    # The claim lives in templates/pvc.yaml so it can bind to the volume
+    # carried over from the old tenant-dchen-actual-budget namespace.
+    existingClaim: actual-budget-data
+
+data:
+  # Longhorn PV that held the budget data under tenant-dchen-actual-budget.
+  volumeName: REPLACE_WITH_PV_NAME
