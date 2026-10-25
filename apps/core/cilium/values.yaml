@@ -51,8 +51,13 @@ cilium:
 
   policyAuditMode: false
 
+  # The chart doesn't restart pods when cilium-config changes, so a merged
+  # config change would sit unused until someone restarts them by hand.
+  rollOutCiliumPods: true
+
   operator:
     replicas: 2
+    rollOutPods: true
 
   hubble:
     relay:
