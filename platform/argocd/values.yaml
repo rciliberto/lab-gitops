@@ -17,9 +17,9 @@ argo-cd:
   server:
     extraArgs:
       - --insecure
-    autoscaling:
-      enabled: true
-      minReplicas: 2
+    # No metrics-server in the cluster, so an HPA can't read CPU and leaves
+    # the app Degraded. Run a fixed 2 replicas instead.
+    replicas: 2
   repoServer:
     initContainers:
       - name: install-helm4
@@ -37,8 +37,8 @@ argo-cd:
       - name: custom-tools
         mountPath: /usr/local/bin/helm
         subPath: helm
-    autoscaling:
-      enabled: true
-      minReplicas: 2
+    # No metrics-server in the cluster, so an HPA can't read CPU and leaves
+    # the app Degraded. Run a fixed 2 replicas instead.
+    replicas: 2
   applicationSet:
     replicas: 2
