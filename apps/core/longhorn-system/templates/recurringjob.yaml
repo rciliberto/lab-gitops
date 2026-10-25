@@ -11,6 +11,22 @@ spec:
   retain: 7
   concurrency: 2
 ---
+# Hourly backups bound data loss to an hour. A Longhorn snapshot captures a whole
+# volume atomically, so Postgres recovers from one like after a power cut; CNPG
+# keeps data and WAL on the same volume.
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: hourly-backup
+  namespace: longhorn-system
+spec:
+  task: backup
+  cron: "15 * * * *"
+  groups:
+    - default
+  retain: 24
+  concurrency: 2
+---
 # Longhorn's own settings and volume definitions, for restoring Longhorn on a rebuilt cluster.
 apiVersion: longhorn.io/v1beta2
 kind: RecurringJob
