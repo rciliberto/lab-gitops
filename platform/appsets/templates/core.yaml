@@ -30,18 +30,3 @@ spec:
           selfHeal: true
         syncOptions:
           - ServerSideApply=true
-  # Envoy Gateway's chart also ships the Gateway API CRDs, which apps/core/gateway-api owns now.
-  # Stop rendering them here, and don't prune, so Argo CD doesn't delete the CRDs (and every
-  # Gateway and route with them) when they leave this app. Envoy Gateway is gone; remove this in a
-  # follow-up once Argo CD has deleted the envoy-gateway-system app.
-  templatePatch: |
-    {{ `{{- if eq .path.basename "envoy-gateway-system" }}` }}
-    spec:
-      source:
-        helm:
-          skipCrds: true
-      syncPolicy:
-        automated:
-          prune: false
-          selfHeal: true
-    {{ `{{- end }}` }}
