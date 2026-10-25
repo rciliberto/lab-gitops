@@ -10,11 +10,6 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: lab-gateway
-      namespace: envoy-gateway-system
-      sectionName: https-lab
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: lab-gateway
       namespace: gateway
       sectionName: https-lab
   hostnames:
@@ -40,11 +35,6 @@ metadata:
     link.argocd.argoproj.io/external-link: https://vault.ciliber.to
 spec:
   parentRefs:
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: lab-gateway
-      namespace: envoy-gateway-system
-      sectionName: https-public
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: lab-gateway

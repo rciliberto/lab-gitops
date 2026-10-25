@@ -6,9 +6,6 @@ metadata:
 spec:
   parentRefs:
     - name: lab-gateway
-      namespace: envoy-gateway-system
-      sectionName: ssh
-    - name: lab-gateway
       namespace: gateway
       sectionName: ssh
   rules:

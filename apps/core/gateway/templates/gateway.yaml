@@ -5,14 +5,12 @@ metadata:
   namespace: gateway
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01-issuer
-    # Keep DNS on the Envoy gateway while both run side by side. Remove at the cutover.
-    external-dns.alpha.kubernetes.io/target: 10.30.0.2
 spec:
   gatewayClassName: cilium
   infrastructure:
     annotations:
-      # Test address while Envoy Gateway still holds 10.30.0.2. Moves to 10.30.0.2 at the cutover.
-      lbipam.cilium.io/ips: 10.30.0.3
+      # Keep the gateway on the address DNS and the router already point at.
+      lbipam.cilium.io/ips: 10.30.0.2
   listeners:
     - name: http
       port: 80

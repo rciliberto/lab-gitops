@@ -10,11 +10,6 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: lab-gateway
-      namespace: envoy-gateway-system
-      sectionName: https-launchboats-dev
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: lab-gateway
       namespace: gateway
       sectionName: https-launchboats-dev
   hostnames:
