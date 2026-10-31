@@ -24,11 +24,19 @@ spec:
           port: 8080
           weight: 1
       matches:
-        - headers:
+        - path:
+            type: PathPrefix
+            value: /
+          headers:
             - name: content-type
+              type: Exact
               value: application/grpc-web+proto
-        - headers:
+        - path:
+            type: PathPrefix
+            value: /
+          headers:
             - name: content-type
+              type: Exact
               value: application/grpc
     - backendRefs:
         - group: ''
