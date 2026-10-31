@@ -1,0 +1,10 @@
+apiVersion: v2
+name: jellyfin-deployment
+version: 1.0.0
+appVersion: "1.0.0"
+
+dependencies:
+  # https://github.com/jellyfin/jellyfin-helm
+  - name: jellyfin
+    version: 3.7.0
+    repository: https://jellyfin.github.io/jellyfin-helm
