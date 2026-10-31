@@ -1,0 +1,52 @@
+jellyfin:
+  # The config volume is ReadWriteOnce, so stop the old pod before starting a new one.
+  deploymentStrategy:
+    type: Recreate
+
+  # Run as a non-root user; fsGroup makes the Longhorn config volume writable.
+  podSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    runAsNonRoot: true
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+
+  persistence:
+    # Library database, metadata and settings. Backed up by the Longhorn
+    # recurring jobs like every other volume.
+    config:
+      enabled: true
+      type: pvc
+      storageClass: longhorn
+      size: 20Gi
+    # Movie files on orca Volume 1, mounted read-only. Jellyfin never writes
+    # to the library; rips are copied onto the share from the desktop/Mac.
+    media:
+      enabled: true
+      type: nfs
+      nfsServer: orca.ciliber.to
+      nfsPath: /volume1/library
+      readOnly: true
+    # Transcode scratch space stays an emptyDir (the chart default).
+    cache:
+      enabled: false
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      memory: 4Gi
+
+  httpRoute:
+    enabled: true
+    annotations:
+      link.argocd.argoproj.io/external-link: https://jellyfin.lab.ciliber.to
+    parentRefs:
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        name: lab-gateway
+        namespace: gateway
+        sectionName: https-lab
+    hostnames:
+      - jellyfin.lab.ciliber.to
