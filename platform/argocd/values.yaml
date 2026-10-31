@@ -14,9 +14,15 @@ argo-cd:
         rollingUpdate:
           maxSurge: 0
           maxUnavailable: 1
+  configs:
+    params:
+      server.insecure: true
   server:
-    extraArgs:
-      - --insecure
+    service:
+      # argocd-server only accepts gRPC over HTTP/2 and Cilium's gateway only
+      # uses it upstream on ports that advertise h2c. See templates/httproute.yaml.
+      servicePortHttp2: 8080
+      servicePortHttp2AppProtocol: kubernetes.io/h2c
     # No metrics-server in the cluster, so an HPA can't read CPU and leaves
     # the app Degraded. Run a fixed 2 replicas instead.
     replicas: 2

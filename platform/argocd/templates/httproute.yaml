@@ -15,6 +15,21 @@ spec:
   hostnames:
     - argocd.lab.ciliber.to
   rules:
+    # The gateway rewrites gRPC-web to gRPC, so the CLI's requests can arrive here
+    # with either content type. Both need the h2c port, and the web UI can't use it.
+    - backendRefs:
+        - group: ''
+          kind: Service
+          name: platform-argocd-server
+          port: 8080
+          weight: 1
+      matches:
+        - headers:
+            - name: content-type
+              value: application/grpc-web+proto
+        - headers:
+            - name: content-type
+              value: application/grpc
     - backendRefs:
         - group: ''
           kind: Service
