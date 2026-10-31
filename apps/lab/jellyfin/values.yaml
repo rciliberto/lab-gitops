@@ -19,14 +19,15 @@ jellyfin:
       type: pvc
       storageClass: longhorn
       size: 20Gi
-    # Movie files on orca Volume 1, mounted read-only. Jellyfin never writes
-    # to the library; rips are copied onto the share from the desktop/Mac.
+    # Movie files on orca Volume 1. Writable so Jellyfin can keep trickplay
+    # images and other generated files next to the media on the NAS instead
+    # of on the smaller Longhorn config volume.
     media:
       enabled: true
       type: nfs
       nfsServer: orca.ciliber.to
       nfsPath: /volume1/library
-      readOnly: true
+      readOnly: false
     # Transcode scratch space stays an emptyDir (the chart default).
     cache:
       enabled: false
