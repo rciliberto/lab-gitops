@@ -42,6 +42,9 @@ cilium:
   # to exist when the operator starts.
   gatewayAPI:
     enabled: true
+    # Lets a Service port's appProtocol pick the upstream protocol. ArgoCD needs
+    # this for the CLI; ports without one keep using HTTP/1.1.
+    enableAppProtocol: true
 
   # Takes over from MetalLB in a follow-up change, once Cilium is the CNI.
   bgpControlPlane:
