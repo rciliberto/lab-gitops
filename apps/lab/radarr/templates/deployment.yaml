@@ -3,19 +3,6 @@
 # client: rips are copied into Import/ on the library share and brought in
 # with Wanted > Manual Import. Import/ and Movies/ live on the same NFS
 # share, so a move is a rename, not a copy of a 50 GB file.
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: radarr-config
-  namespace: radarr
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: longhorn
-  resources:
-    requests:
-      storage: 5Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -99,44 +86,3 @@ spec:
             path: /volume1/library
         - name: tmp
           emptyDir: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: radarr
-  namespace: radarr
-spec:
-  selector:
-    app.kubernetes.io/name: radarr
-  ports:
-    - name: http
-      port: 7878
-      targetPort: http
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: radarr
-  namespace: radarr
-  annotations:
-    link.argocd.argoproj.io/external-link: https://radarr.lab.ciliber.to
-spec:
-  parentRefs:
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: lab-gateway
-      namespace: gateway
-      sectionName: https-lab
-  hostnames:
-    - radarr.lab.ciliber.to
-  rules:
-    - backendRefs:
-        - group: ''
-          kind: Service
-          name: radarr
-          port: 7878
-          weight: 1
-      matches:
-        - path:
-            type: PathPrefix
-            value: /

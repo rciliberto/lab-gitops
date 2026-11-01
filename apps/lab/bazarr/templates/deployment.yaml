@@ -2,19 +2,6 @@
 # next to the video files. Connect it to http://radarr.radarr.svc:7878 and
 # http://sonarr.sonarr.svc:8989 with their API keys. It has no login env
 # setting: turn on Forms auth under Settings > General > Security on first visit.
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: bazarr-config
-  namespace: bazarr
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: longhorn
-  resources:
-    requests:
-      storage: 5Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -88,44 +75,3 @@ spec:
             path: /volume1/library
         - name: tmp
           emptyDir: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: bazarr
-  namespace: bazarr
-spec:
-  selector:
-    app.kubernetes.io/name: bazarr
-  ports:
-    - name: http
-      port: 6767
-      targetPort: http
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: bazarr
-  namespace: bazarr
-  annotations:
-    link.argocd.argoproj.io/external-link: https://bazarr.lab.ciliber.to
-spec:
-  parentRefs:
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: lab-gateway
-      namespace: gateway
-      sectionName: https-lab
-  hostnames:
-    - bazarr.lab.ciliber.to
-  rules:
-    - backendRefs:
-        - group: ''
-          kind: Service
-          name: bazarr
-          port: 6767
-          weight: 1
-      matches:
-        - path:
-            type: PathPrefix
-            value: /
