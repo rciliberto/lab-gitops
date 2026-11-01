@@ -43,11 +43,21 @@ spec:
             httpGet:
               path: /ping
               port: http
+              # The kubelet sends the pod IP as Host, which the app's
+              # "Allowed Hosts" setting rejects. localhost is always allowed.
+              httpHeaders:
+                - name: Host
+                  value: localhost
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /ping
               port: http
+              # The kubelet sends the pod IP as Host, which the app's
+              # "Allowed Hosts" setting rejects. localhost is always allowed.
+              httpHeaders:
+                - name: Host
+                  value: localhost
             initialDelaySeconds: 30
             periodSeconds: 30
           resources:
