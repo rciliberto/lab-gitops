@@ -2,6 +2,9 @@
 # Jellyfin library as "TV/Show (Year)/Season 01/...". Like Radarr, there is
 # no download client: copy rips into Import/ on the library share and bring
 # them in with Wanted > Manual Import (Move). Root folder: /data/TV.
+# On first visit it asks you to create a login. Pick Forms and set
+# "Authentication Required" to Enabled: traffic arrives through the gateway
+# from inside the cluster, so "disabled for local addresses" would leave it open.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,14 +35,6 @@ spec:
         - name: sonarr
           # https://github.com/home-operations/containers/tree/main/apps/sonarr
           image: ghcr.io/home-operations/sonarr:5.0.0.2907
-          env:
-            # Require a login for every request. Traffic arrives through the
-            # gateway from inside the cluster, so "disabled for local
-            # addresses" would leave it open. The user is created on first visit.
-            - name: SONARR__AUTH__METHOD
-              value: Forms
-            - name: SONARR__AUTH__REQUIRED
-              value: Enabled
           ports:
             - name: http
               containerPort: 8989

@@ -3,6 +3,9 @@
 # client: rips are copied into Import/ on the library share and brought in
 # with Wanted > Manual Import. Import/ and Movies/ live on the same NFS
 # share, so a move is a rename, not a copy of a 50 GB file.
+# On first visit it asks you to create a login. Pick Forms and set
+# "Authentication Required" to Enabled: traffic arrives through the gateway
+# from inside the cluster, so "disabled for local addresses" would leave it open.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,14 +36,6 @@ spec:
         - name: radarr
           # https://github.com/home-operations/containers/tree/main/apps/radarr
           image: ghcr.io/home-operations/radarr:7.0.0
-          env:
-            # Require a login for every request. Traffic arrives through the
-            # gateway from inside the cluster, so "disabled for local
-            # addresses" would leave it open. The user is created on first visit.
-            - name: RADARR__AUTH__METHOD
-              value: Forms
-            - name: RADARR__AUTH__REQUIRED
-              value: Enabled
           ports:
             - name: http
               containerPort: 7878
