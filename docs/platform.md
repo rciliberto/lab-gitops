@@ -19,7 +19,7 @@
 
 ## Router BGP
 
-Cilium's BGP control plane peers with the UniFi Dream Machine Pro at `10.20.20.1` from every node (`apps/core/cilium/templates/bgp.yaml`):
+Cilium's BGP control plane peers with the UniFi Dream Machine Pro at `10.20.20.1` from every node (`apps/core/cilium/templates/ciliumbgp*.yaml`):
 
 - UniFi/router ASN: `64501`
 - Kubernetes/Cilium ASN: `64500`
@@ -38,6 +38,8 @@ mkdir -p apps/lab/my-app/templates
 
 Add `Chart.yaml`, `values.yaml`, and `templates/namespace.yaml` at minimum. Commit and push — ArgoCD discovers and syncs automatically. No config files to update.
 
+Put each Kubernetes resource in its own file under `templates/`, named after its kind in lowercase (`namespace.yaml`, `pvc.yaml`, `deployment.yaml`, `service.yaml`, `httproute.yaml`, `sealed-secrets.yaml`). When an app has more than one resource of a kind, add a suffix that says which one, such as `httproute-public.yaml`, `deployment-ci.yaml` or `sealed-secrets-redis.yaml`. Wrap a resource that a value toggles in its own `{{- if }}` inside its file.
+
 ## Fresh Cluster Bootstrap
 
 1. Install Cilium (ArgoCD needs a CNI to run; ArgoCD adopts this release later):
@@ -45,7 +47,7 @@ Add `Chart.yaml`, `values.yaml`, and `templates/namespace.yaml` at minimum. Comm
    helm dependency build apps/core/cilium
    helm install cilium apps/core/cilium -n cilium --create-namespace
    ```
-   The BGP and LoadBalancer pool resources need CRDs that the Cilium operator creates on startup, so remove `templates/bgp.yaml` for this first install (or re-run it once the operator is up); ArgoCD applies them later.
+   The BGP and LoadBalancer pool resources need CRDs that the Cilium operator creates on startup, so remove `templates/cilium*.yaml` for this first install (or re-run it once the operator is up); ArgoCD applies them later.
 2. Install ArgoCD:
    ```sh
    helm install argocd argo-cd --repo https://argoproj.github.io/argo-helm -n argocd --create-namespace

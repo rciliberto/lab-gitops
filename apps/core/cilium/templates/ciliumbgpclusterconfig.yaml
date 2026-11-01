@@ -1,0 +1,18 @@
+# Announces LoadBalancer IPs to the UniFi UDM Pro over BGP (replaces MetalLB).
+# Router side: docs/unifi-metallb-bgp.conf (same ASNs, neighbors and prefixes).
+apiVersion: cilium.io/v2
+kind: CiliumBGPClusterConfig
+metadata:
+  name: router
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  bgpInstances:
+    - name: lab
+      localASN: 64500
+      peers:
+        - name: udm-pro
+          peerASN: 64501
+          peerAddress: 10.20.20.1
+          peerConfigRef:
+            name: router
