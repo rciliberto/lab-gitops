@@ -1,0 +1,14 @@
+{{- if .Values.ci.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forgejo-runner-ci-state
+  namespace: {{ .Values.namespace.name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.ci.state.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.ci.state.size }}
+{{- end }}

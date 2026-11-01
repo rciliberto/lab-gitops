@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: renovate-config
+data:
+  # List any repositories that Renovate should
+  # run against, in the form of `USER/REPO`
+  config.json: |-
+    {
+      "repositories": [
+        "rciliberto/lab-gitops"
+      ]
+    }

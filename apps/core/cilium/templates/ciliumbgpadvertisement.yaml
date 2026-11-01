@@ -1,0 +1,19 @@
+apiVersion: cilium.io/v2
+kind: CiliumBGPAdvertisement
+metadata:
+  name: loadbalancer-ips
+  labels:
+    advertise: loadbalancer-ips
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  advertisements:
+    - advertisementType: Service
+      service:
+        addresses:
+          - LoadBalancerIP
+      # Match every Service.
+      selector:
+        matchExpressions:
+          - key: io.cilium/bgp-skip
+            operator: DoesNotExist
