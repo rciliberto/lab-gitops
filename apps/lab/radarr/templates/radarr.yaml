@@ -92,8 +92,7 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: radarr-config
-        # The Jellyfin library share on orca, read-write. Jellyfin mounts the
-        # same share read-only and scans only Movies/.
+        # The Jellyfin library share on orca (Movies/, TV/, Import/), read-write.
         - name: library
           nfs:
             server: orca.ciliber.to

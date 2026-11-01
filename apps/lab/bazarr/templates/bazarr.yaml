@@ -1,0 +1,131 @@
+# Bazarr fetches subtitles for what Radarr and Sonarr manage and saves them
+# next to the video files. Connect it to http://radarr.radarr.svc:7878 and
+# http://sonarr.sonarr.svc:8989 with their API keys. It has no login env
+# setting: turn on Forms auth under Settings > General > Security on first visit.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bazarr-config
+  namespace: bazarr
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bazarr
+  namespace: bazarr
+spec:
+  replicas: 1
+  # The config volume is ReadWriteOnce, so stop the old pod before starting a new one.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: bazarr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: bazarr
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: bazarr
+          # https://github.com/home-operations/containers/tree/main/apps/bazarr
+          image: ghcr.io/home-operations/bazarr:1.6.2
+          ports:
+            - name: http
+              containerPort: 6767
+          readinessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: library
+              mountPath: /data
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        # SQLite database and settings. Backed up by the Longhorn recurring jobs.
+        - name: config
+          persistentVolumeClaim:
+            claimName: bazarr-config
+        # The Jellyfin library share on orca (Movies/, TV/, Import/), read-write.
+        - name: library
+          nfs:
+            server: orca.ciliber.to
+            path: /volume1/library
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bazarr
+  namespace: bazarr
+spec:
+  selector:
+    app.kubernetes.io/name: bazarr
+  ports:
+    - name: http
+      port: 6767
+      targetPort: http
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: bazarr
+  namespace: bazarr
+  annotations:
+    link.argocd.argoproj.io/external-link: https://bazarr.lab.ciliber.to
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: lab-gateway
+      namespace: gateway
+      sectionName: https-lab
+  hostnames:
+    - bazarr.lab.ciliber.to
+  rules:
+    - backendRefs:
+        - group: ''
+          kind: Service
+          name: bazarr
+          port: 6767
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
