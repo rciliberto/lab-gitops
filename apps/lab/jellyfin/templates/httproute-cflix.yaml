@@ -1,0 +1,29 @@
+# Public route for Jellyfin on cflix.ciliber.to. Same backend and listener as
+# jellyfin-public; the *.ciliber.to wildcard certificate already covers it.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: jellyfin-cflix
+  namespace: jellyfin
+  annotations:
+    link.argocd.argoproj.io/external-link: https://cflix.ciliber.to
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: lab-gateway
+      namespace: gateway
+      sectionName: https-public
+  hostnames:
+    - cflix.ciliber.to
+  rules:
+    - backendRefs:
+        - group: ''
+          kind: Service
+          name: jellyfin
+          port: 8096
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
